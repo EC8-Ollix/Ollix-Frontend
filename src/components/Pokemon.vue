@@ -1,4 +1,5 @@
 <template>
+        <p>{{ message }}</p>
     <a-table :dataSource="pokemons" :columns="columns" />
 </template>
   
