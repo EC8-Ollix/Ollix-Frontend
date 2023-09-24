@@ -1,0 +1,25 @@
+name: develop workflow
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18  # Adjust the Node.js version as needed
+
+      - name: Install dependencies
+        run: yarn install  # Use Yarn to install dependencies
+
+      - name: Build project
+        run: yarn build  # Use Yarn to build the project
