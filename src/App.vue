@@ -12,7 +12,7 @@ import Pokemon from './components/Pokemon.vue';
     }"
   >
     <HelloWorld message="Olá Ollix" />
-    <Pokemon message="Pokemons" />
+    <Pokemon message="Tabela de Pokemons" />
   </a-config-provider>
 </template>
 
