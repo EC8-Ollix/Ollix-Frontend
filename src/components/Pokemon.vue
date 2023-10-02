@@ -1,5 +1,4 @@
-<template>
-        <p>{{ message }}</p>
+<template>     
     <a-table :dataSource="pokemons" :columns="columns" />
 </template>
   
@@ -23,12 +22,6 @@
   
   export default defineComponent({
     name: 'Pokemon Table',
-    props: {
-      message: {
-        type: String as PropType<string>,
-        required: true,
-      },
-    },
     setup(props) {
 
       const pokemons = ref<Pokemon[]>([]);
