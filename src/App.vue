@@ -1,21 +1,45 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import Pokemon from './components/Pokemon.vue';
+<script lang="ts">
+import Header from './components/template/Header.vue';
+import Footer from './components/template/Footer.vue';
+import Sidebar from './components/template/Sidebar.vue';
+import Content from './components/template/Content.vue';
+
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  name: 'App',
+  components: {Header, Footer, Sidebar, Content }
+});
+
 </script>
 
 <template>
   <a-config-provider
     :theme="{
       token: {
-        colorPrimary: '#00b96b',
+        colorPrimary: '#153146',
       },
     }"
   >
-    <HelloWorld message="Olá Ollix" />
-    <Pokemon message="Tabela de Pokemons 34" />
+    
+    <a-layout style="height: 100vh;">
+      <Header title="Cliente 1" hideToggle="true"/>
+
+      <a-layout>
+        <Sidebar />
+        <a-layout>
+          <Content />
+          <Footer />
+        </a-layout>
+      </a-layout>
+      
+    </a-layout>
+
   </a-config-provider>
 </template>
 
 <style scoped>
+
+
 
 </style>
