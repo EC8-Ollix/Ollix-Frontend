@@ -8,7 +8,7 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'App',
-  components: {Header, Footer, Sidebar, Content }
+  components: {Header, Sidebar, Content }
 });
 
 </script>
@@ -23,13 +23,12 @@ export default defineComponent({
   >
     
     <a-layout style="height: 100vh;">
-      <Header title="Cliente 1" hideToggle="true"/>
+      <Header title="Cliente 1" />
 
       <a-layout>
         <Sidebar />
         <a-layout>
           <Content />
-          <Footer />
         </a-layout>
       </a-layout>
       

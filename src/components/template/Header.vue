@@ -2,8 +2,6 @@
 <script lang="ts">
 import { PropType, defineComponent, ref } from 'vue';
 
-import { LeftOutlined } from '@ant-design/icons-vue';
-
 export default defineComponent({
   name: "Header",
   props: {
@@ -38,7 +36,6 @@ export default defineComponent({
 </template>
         
 <style scoped>
-
     .header{
         background-color: #142D3F;
         display: flex;
@@ -60,14 +57,8 @@ export default defineComponent({
         cursor: pointer;
     }
 
-    .toggle{
-        
-    }
-
     .title{
         color: #fff;
         margin-bottom: unset;
     }
-
-
 </style>

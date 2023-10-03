@@ -6,7 +6,6 @@ export default defineComponent({
   props: {
     message: {
       type: String as PropType<string>,
-      required: true,
     },
   },
   setup(props) {
@@ -27,8 +26,11 @@ export default defineComponent({
 <template>
   <div>
     <p>{{ message }}</p>
-    <p>Count: {{ count }}</p>
-    <a-button @click="incrementCount">Somar</a-button>
+    <div style="display: flex;
+      align-items: center;">
+      <p style="margin:unset; margin-right: 5px;">Count: {{ count }}</p>
+      <a-button @click="incrementCount">Somar</a-button> 
+    </div>
   </div>
 </template>
 
