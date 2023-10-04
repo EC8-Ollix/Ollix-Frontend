@@ -24,16 +24,16 @@ export default defineComponent({
 </script>
 
 <template>
-    <a-layout-header class="header">  
+    <a-layout-header class="header" style="height: 50px;">  
         <div class="main-header">
             <a  href="/">
                 <div class="logo" />
             </a>
         </div>
 
-        <h2 class="title">
+        <h3 class="title">
             {{ title }}
-        </h2>
+        </h3>
 
         <div class="toolbar">
             <a-tooltip title="">
@@ -42,7 +42,7 @@ export default defineComponent({
             
             <a-dropdown trigger="hover" placement="bottomRight">
                 <a class="ant-dropdown-link" @click.prevent>
-                    <a-avatar size="large" style="background-color: #f56a00; vertical-align: middle; margin-inline: 8px;">
+                    <a-avatar style="background-color: #f56a00; vertical-align: middle; margin-inline: 8px;">
                         U
                     </a-avatar>
                 </a>
