@@ -1,7 +1,7 @@
 
 <script lang="ts">
 
-import { UserOutlined, VideoCameraOutlined, UploadOutlined } from '@ant-design/icons-vue';
+import { AreaChartOutlined, ControlOutlined, DatabaseOutlined, UsergroupDeleteOutlined} from '@ant-design/icons-vue';
 
 import { defineComponent, ref } from 'vue';
 
@@ -22,7 +22,13 @@ export default defineComponent({
         onCollapse,
         onBreakpoint
     };
-  }
+  },
+  components: {
+    AreaChartOutlined,
+    ControlOutlined,
+    DatabaseOutlined,
+    UsergroupDeleteOutlined
+  },
 });
 
 </script>
@@ -40,19 +46,19 @@ export default defineComponent({
           :style="{ borderRight: 0 }"
         >
         <a-menu-item key="1">
-          <user-outlined />
-          <span class="nav-text">Dashboard</span>
+          <AreaChartOutlined />
+          <span class="nav-text">           Dashboard</span>
         </a-menu-item>
         <a-menu-item key="2">
-          <video-camera-outlined />
+          <ControlOutlined />
           <span class="nav-text">Hélices</span>
         </a-menu-item>
         <a-menu-item key="3">
-          <upload-outlined />
+          <DatabaseOutlined />
           <span class="nav-text">Logs</span>
         </a-menu-item>
         <a-menu-item key="4">
-          <user-outlined />
+          <UsergroupDeleteOutlined />
           <span class="nav-text">Usuários</span>
         </a-menu-item>
         </a-menu>
