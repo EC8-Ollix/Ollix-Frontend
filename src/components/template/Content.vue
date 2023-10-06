@@ -9,7 +9,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 
-import Dashboard  from '../ContentComponents/Dashboard.vue';
+import Dashboard  from '../Dashboard/Dashboard.vue';
 
 export default defineComponent({
   name: 'Content',
