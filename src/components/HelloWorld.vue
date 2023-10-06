@@ -1,5 +1,6 @@
 <script lang="ts">
-import { defineComponent, PropType, ref } from 'vue';
+import { defineComponent, PropType, ref, computed } from 'vue';
+import { useStore } from 'vuex';
 
 export default defineComponent({
   name: "HelloWorld",
@@ -9,15 +10,17 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const count = ref(0);
+    const store = useStore();
 
-    const incrementCount = () => {
-      count.value++;
-    };
+    const count = computed(() => store.state.count);
 
-    return {
-      count,
-      incrementCount,
+    const increment = () => {
+        store.commit('increment');
+    }
+
+    return { 
+      count, 
+      increment 
     };
   }
 });
@@ -29,7 +32,7 @@ export default defineComponent({
     <div style="display: flex;
       align-items: center;">
       <p style="margin:unset; margin-right: 5px;">Count: {{ count }}</p>
-      <a-button @click="incrementCount">Somar</a-button> 
+      <a-button @click="increment">Somar</a-button> 
     </div>
   </div>
 </template>

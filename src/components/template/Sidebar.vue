@@ -2,7 +2,6 @@
 <script lang="ts">
 
 import { AreaChartOutlined, ControlOutlined, DatabaseOutlined, UsergroupDeleteOutlined} from '@ant-design/icons-vue';
-
 import { defineComponent, ref } from 'vue';
 
 
@@ -47,19 +46,27 @@ export default defineComponent({
         >
         <a-menu-item key="1">
           <AreaChartOutlined />
-          <span class="nav-text">           Dashboard</span>
+          <span class="nav-text">
+             Dashboard
+          </span>
         </a-menu-item>
         <a-menu-item key="2">
           <ControlOutlined />
-          <span class="nav-text">Hélices</span>
+          <span class="nav-text">
+            Hélices
+          </span>
         </a-menu-item>
         <a-menu-item key="3">
           <DatabaseOutlined />
-          <span class="nav-text">Logs</span>
+          <span class="nav-text">
+            Logs
+          </span>
         </a-menu-item>
         <a-menu-item key="4">
           <UsergroupDeleteOutlined />
-          <span class="nav-text">Usuários</span>
+          <span class="nav-text">
+            Usuários
+          </span>
         </a-menu-item>
         </a-menu>
     </a-layout-sider>
