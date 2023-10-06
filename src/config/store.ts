@@ -3,10 +3,18 @@ import { createStore} from 'vuex'
 // Define o estado
 interface State {
     count: number;
+    user: {
+        name: string,
+        email: string 
+    }
 }
 
 const state: State = {
-    count: 0
+    count: 0,
+    user: {
+        name: 'Daniel Santos',
+        email: 'daniel@gmail.com' 
+    }
 }
 
 const store = createStore({
@@ -14,7 +22,6 @@ const store = createStore({
     mutations: {
         increment(state: State) {
             state.count++;
-            console.log("Contador: " + state.count);
         }
     },
     actions: {
@@ -23,7 +30,8 @@ const store = createStore({
         }
     },
     getters: {
-        count: (state: State) => state.count
+        count: (state: State) => state.count,
+        user: (state: State) => state.user,
     }
 })
 

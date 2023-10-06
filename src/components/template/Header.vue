@@ -1,8 +1,8 @@
 <script lang="ts">
-import { PropType, defineComponent } from 'vue';
+import { PropType, defineComponent, computed } from 'vue';
 import { QuestionCircleOutlined, ExportOutlined, UserOutlined } from '@ant-design/icons-vue';
 import { Avatar, Dropdown, Menu, Tooltip } from 'ant-design-vue';
-
+import { useStore } from 'vuex';
 
 
 export default defineComponent({
@@ -22,6 +22,15 @@ export default defineComponent({
       required: true,
     },
   },
+  setup(props) {
+    const store = useStore();
+
+    const user = computed(() => store.state.user);
+
+    return { 
+        user
+    };
+  }
 });
 </script>
 
@@ -39,12 +48,12 @@ export default defineComponent({
 
         <div class="toolbar">
             <a-tooltip title="">
-            <question-circle-outlined style="color: #fff; margin-right: 12px;"/>
+                <question-circle-outlined style="color: #fff; margin-right: 12px;"/>
             </a-tooltip>
-            
+
             <a-dropdown trigger="hover" placement="bottomRight">
-                <a class="ant-dropdown-link" @click.prevent>
-                    <a-avatar style="background-color: #f56a00; vertical-align: middle; margin-inline: 8px;">
+                <a class="ant-dropdown-link" @click.prevent >
+                    <a-avatar style="background-color: #f56a00; vertical-align: middle; margin-inline: 8px;" :title="user.name">
                         U
                     </a-avatar>
                 </a>
@@ -101,4 +110,10 @@ export default defineComponent({
         display: flex;
         align-items: center;
     }
+
+    .user-name{
+        color: #000;
+        padding-top: 2px;
+    }
+    
 </style>
