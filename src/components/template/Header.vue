@@ -3,6 +3,8 @@ import { PropType, defineComponent } from 'vue';
 import { QuestionCircleOutlined, ExportOutlined, UserOutlined } from '@ant-design/icons-vue';
 import { Avatar, Dropdown, Menu, Tooltip } from 'ant-design-vue';
 
+
+
 export default defineComponent({
   name: "Header",
   components: {
@@ -12,7 +14,7 @@ export default defineComponent({
     Tooltip,
     QuestionCircleOutlined,
     ExportOutlined,
-    UserOutlined
+    UserOutlined,
   },
   props: {
     title: {
@@ -49,11 +51,15 @@ export default defineComponent({
                 <template #overlay>
                     <a-menu>
                         <a-menu-item key="1">
-                            <UserOutlined />
+                            <span style="margin-right: 5px;">
+                                <UserOutlined />
+                            </span>
                             Meu Perfil
                         </a-menu-item>
                         <a-menu-item key="2">
-                            <ExportOutlined />
+                            <span style="margin-right: 5px;">
+                                <ExportOutlined />
+                            </span>
                             Sair
                         </a-menu-item>
                     </a-menu>
