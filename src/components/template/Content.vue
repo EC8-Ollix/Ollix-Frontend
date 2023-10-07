@@ -11,11 +11,8 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 
-import Dashboard from '../dashboard/Dashboard.vue'
-
 export default defineComponent({
     name: 'Content',
-    components: { Dashboard },
     setup() {
         const isHovered = ref(false)
 
