@@ -4,7 +4,7 @@ const routes = [
     {
         name: 'dashboard',
         path: '/Ollix-Frontend',
-        component: () => import('../components/dashboard/Dashboard.vue'),
+        component: () => import('../components/Dashboard/Dashboard.vue'),
     },
     {
         name: 'helices',
