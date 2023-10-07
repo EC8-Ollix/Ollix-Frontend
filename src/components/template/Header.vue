@@ -1,43 +1,46 @@
 <script lang="ts">
-import { PropType, defineComponent, computed } from 'vue';
-import { QuestionCircleOutlined, ExportOutlined, UserOutlined } from '@ant-design/icons-vue';
-import { Avatar, Dropdown, Menu, Tooltip } from 'ant-design-vue';
-import { useStore } from 'vuex';
-
-
-export default defineComponent({
-  name: "Header",
-  components: {
-    Avatar,
-    Dropdown,
-    Menu,
-    Tooltip,
+import { PropType, defineComponent, computed } from 'vue'
+import {
     QuestionCircleOutlined,
     ExportOutlined,
     UserOutlined,
-  },
-  props: {
-    title: {
-      type: String as PropType<string>,
-      required: true,
+} from '@ant-design/icons-vue'
+import { Avatar, Dropdown, Menu, Tooltip } from 'ant-design-vue'
+import { useStore } from 'vuex'
+
+export default defineComponent({
+    name: 'Header',
+    components: {
+        Avatar,
+        Dropdown,
+        Menu,
+        Tooltip,
+        QuestionCircleOutlined,
+        ExportOutlined,
+        UserOutlined,
     },
-  },
-  setup(props) {
-    const store = useStore();
+    props: {
+        title: {
+            type: String as PropType<string>,
+            required: true,
+        },
+    },
+    setup(props) {
+        const store = useStore()
 
-    const user = computed(() => store.state.user);
+        const user = computed(() => store.state.user)
 
-    return { 
-        user
-    };
-  }
-});
+        return {
+            user,
+        }
+    },
+})
 </script>
 
 <template>
-    <a-layout-header class="header" style="height: 50px;">  
+    <a-layout-header class="header" style="height: 50px">
         <div class="main-header">
-            <a  href="/">
+            <a href="/">
                 <div class="logo" />
             </a>
         </div>
@@ -48,25 +51,34 @@ export default defineComponent({
 
         <div class="toolbar">
             <a-tooltip title="">
-                <question-circle-outlined style="color: #fff; margin-right: 12px;"/>
+                <question-circle-outlined
+                    style="color: #fff; margin-right: 12px"
+                />
             </a-tooltip>
 
             <a-dropdown trigger="hover" placement="bottomRight">
-                <a class="ant-dropdown-link" @click.prevent >
-                    <a-avatar style="background-color: #f56a00; vertical-align: middle; margin-inline: 8px;" :title="user.name">
+                <a class="ant-dropdown-link" @click.prevent>
+                    <a-avatar
+                        style="
+                            background-color: #f56a00;
+                            vertical-align: middle;
+                            margin-inline: 8px;
+                        "
+                        :title="user.name"
+                    >
                         U
                     </a-avatar>
                 </a>
                 <template #overlay>
                     <a-menu>
                         <a-menu-item key="1">
-                            <span style="margin-right: 5px;">
+                            <span style="margin-right: 5px">
                                 <UserOutlined />
                             </span>
                             Meu Perfil
                         </a-menu-item>
                         <a-menu-item key="2">
-                            <span style="margin-right: 5px;">
+                            <span style="margin-right: 5px">
                                 <ExportOutlined />
                             </span>
                             Sair
@@ -75,45 +87,43 @@ export default defineComponent({
                 </template>
             </a-dropdown>
         </div>
-
-    </a-layout-header>  
+    </a-layout-header>
 </template>
-        
+
 <style scoped>
-    .header{
-        background-color: #142D3F;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
+.header {
+    background-color: #142d3f;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-    .main-header {
-        display: inline-flex;
-    }
+.main-header {
+    display: inline-flex;
+}
 
-    .logo {
-        width: 90px;
-        height: 30px;
-        margin: 16px 24px 16px 0;
-        background: url('/logo-name-white.svg');
-        background-repeat: no-repeat;
-        background-size: contain;
-        cursor: pointer;
-    }
+.logo {
+    width: 90px;
+    height: 30px;
+    margin: 16px 24px 16px 0;
+    background: url('/logo-name-white.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    cursor: pointer;
+}
 
-    .title{
-        color: #fff;
-        margin-bottom: unset;
-    }
+.title {
+    color: #fff;
+    margin-bottom: unset;
+}
 
-    .toolbar {
-        display: flex;
-        align-items: center;
-    }
+.toolbar {
+    display: flex;
+    align-items: center;
+}
 
-    .user-name{
-        color: #000;
-        padding-top: 2px;
-    }
-    
+.user-name {
+    color: #000;
+    padding-top: 2px;
+}
 </style>
