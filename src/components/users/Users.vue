@@ -115,3 +115,9 @@ const handleTableChange = (pagination: TablePaginationConfig) => {
 
 const recordKey = (record: { login: { uuid: string } }) => record.login.uuid
 </script>
+
+<style scoped>
+.content {
+    border-radius: 12px;
+}
+</style>
