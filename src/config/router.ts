@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
-    {
-        name: 'dashboard',
-        path: '/Ollix-Frontend',
-        component: () => import('../components/Dashboard/Dashboard.vue'),
-    },
+    // {
+    //     name: 'dashboard',
+    //     path: '/Ollix-Frontend',
+    //     component: () => import('../components/Dashboard/Dashboard.vue'),
+    // },
     {
         name: 'helices',
         path: '/Ollix-Frontend/helices',
