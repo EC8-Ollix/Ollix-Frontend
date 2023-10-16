@@ -2,12 +2,22 @@
 import Header from './components/template/Header.vue'
 import Sidebar from './components/template/Sidebar.vue'
 import Content from './components/template/Content.vue'
+import { useStore } from 'vuex'
 
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 
 export default defineComponent({
     name: 'App',
     components: { Header, Sidebar, Content },
+    setup(props) {
+        const store = useStore()
+
+        const user = computed(() => store.state.user)
+
+        return {
+            user,
+        }
+    },
 })
 </script>
 

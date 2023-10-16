@@ -1,36 +1,41 @@
 import { createStore } from 'vuex'
 
-// Define o estado
 interface State {
-    count: number
-    user: {
-        name: string
-        email: string
+    isLoggedIn: boolean
+    token?: string
+    user?: {
+        id?: string
+        firstName?: string
+        lastName?: string
+        userEmail: string
+        userType?: number
+        clientApp?: {
+            id?: string
+            companyName?: string
+            bussinessName?: string
+            cnpj?: {
+                value: string
+            }
+            active?: true
+        }
     }
 }
 
 const state: State = {
-    count: 0,
+    isLoggedIn: false,
+    token: '',
     user: {
-        name: 'Daniel Santos',
-        email: 'daniel@gmail.com',
+        firstName: 'daniel',
+        userEmail: 'a',
     },
 }
 
 const store = createStore({
     state,
-    mutations: {
-        increment(state: State) {
-            state.count++
-        },
-    },
-    actions: {
-        incrementAction(context) {
-            context.commit('increment')
-        },
-    },
+    mutations: {},
+    actions: {},
     getters: {
-        count: (state: State) => state.count,
+        isLoggedIn: (state: State) => state.isLoggedIn,
         user: (state: State) => state.user,
     },
 })

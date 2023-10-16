@@ -9,10 +9,25 @@
   dependencies:
     "@ctrl/tinycolor" "^3.4.0"
 
+"@ant-design/colors@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@ant-design/colors/-/colors-7.0.0.tgz#eb7eecead124c3533aea05d61254f0a17f2b61b3"
+  integrity sha512-iVm/9PfGCbC0dSMBrz7oiEXZaaGH7ceU40OJEfKmyuzR9R5CRimJYPlRiFtMQGQcbNMea/ePcoIebi4ASGYXtg==
+  dependencies:
+    "@ctrl/tinycolor" "^3.4.0"
+
 "@ant-design/icons-svg@^4.2.1":
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/@ant-design/icons-svg/-/icons-svg-4.3.1.tgz#4b2f65a17d4d32b526baa6414aca2117382bf8da"
   integrity sha512-4QBZg8ccyC6LPIRii7A0bZUk3+lEDCLnhB+FVsflGdcWPPmV+j3fire4AwwoqHV/BibgvBmR9ZIo4s867smv+g==
+
+"@ant-design/icons-vue@^6.0.1":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@ant-design/icons-vue/-/icons-vue-6.1.0.tgz#f9324fdc0eb4cea943cf626d2bf3db9a4ff4c074"
+  integrity sha512-EX6bYm56V+ZrKN7+3MT/ubDkvJ5rK/O2t380WFRflDcVFgsvl3NLH7Wxeau6R8DbrO5jWR6DSTC3B6gYFp77AA==
+  dependencies:
+    "@ant-design/colors" "^6.0.0"
+    "@ant-design/icons-svg" "^4.2.1"
 
 "@ant-design/icons-vue@^7.0.0", "@ant-design/icons-vue@^7.0.1":
   version "7.0.1"
@@ -176,6 +191,17 @@
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-4.6.0.tgz#3c7c9c46e678feefe7a2e5bb609d3dbd665ffb3f"
   integrity sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==
+
+"@surely-vue/table@^4.1.10":
+  version "4.1.10"
+  resolved "https://registry.yarnpkg.com/@surely-vue/table/-/table-4.1.10.tgz#dda375dc3d5ddde148586f389317cfe8d0cfc5a9"
+  integrity sha512-R08/IH9yRL1eSzKY9QIsssD/23Vq7CyBQxbwUroZra65SiZV5EG+09JvFiMp4KxF4bq+tjYP+tY/cszbKkJNug==
+  dependencies:
+    "@ant-design/colors" "^7.0.0"
+    "@ant-design/icons-vue" "^6.0.1"
+    ant-design-vue "^3.0.0 || ^4.0.0"
+    lodash-es "^4.17.21"
+    resize-observer-polyfill "^1.5.1"
 
 "@szmarczak/http-timer@^4.0.5":
   version "4.0.6"
@@ -388,7 +414,7 @@
   dependencies:
     vue-demi ">=0.14.6"
 
-ant-design-vue@^4.0.3:
+"ant-design-vue@^3.0.0 || ^4.0.0", ant-design-vue@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/ant-design-vue/-/ant-design-vue-4.0.3.tgz#0f283c4507368ce4fb658effece3d890394f8c4a"
   integrity sha512-fbgZbbirLx7rc19ytaGxApwS01CKLRzvEZmH0TVF06niQA9ekx7xkvfQGlmiSaCs4b8nWZi4Bo7gUzRNRt5YJA==
@@ -731,7 +757,7 @@ keyv@^4.0.0:
   dependencies:
     json-buffer "3.0.1"
 
-lodash-es@^4.17.15:
+lodash-es@^4.17.15, lodash-es@^4.17.21:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
   integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
@@ -766,6 +792,11 @@ magic-string@^0.30.0:
   integrity sha512-Q/TKtsC5BPm0kGqgBIF9oXAs/xEf2vRKiIB4wCRQTJOQIByZ1d+NnUOotvJOvNpi5RNIgVOMC3pOuaP1ZTDlVg==
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.4.15"
+
+maska@^2.1.10:
+  version "2.1.10"
+  resolved "https://registry.yarnpkg.com/maska/-/maska-2.1.10.tgz#dff9d96bf472280fe623ea2ecd1860c15886d355"
+  integrity sha512-oQLLUCJ4qG1YFHSGQB9P6G0LKSmAwHFFBFhmkJ9pcSUXXDZew5NNTBbPACiixqFBaU7M7LydPlrL0DmI1p+ufQ==
 
 match-sorter@^6.0.2, match-sorter@^6.3.1:
   version "6.3.1"
@@ -1053,6 +1084,11 @@ vue-template-compiler@^2.7.14:
   dependencies:
     de-indent "^1.0.2"
     he "^1.2.0"
+
+vue-the-mask@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/vue-the-mask/-/vue-the-mask-0.11.1.tgz#91ee01008354ae57bccc79bb61b65f32d971d9d5"
+  integrity sha512-UquSfnSWejD0zAfcD+3jJ1chUAkOAyoxya9Lxh9acCRtrlmGcAIvd0cQYraWqKenbuZJUdum+S174atv2AuEHQ==
 
 vue-tsc@^1.8.16:
   version "1.8.16"
