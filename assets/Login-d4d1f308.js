@@ -1,0 +1,1 @@
+import{d as o,_ as t,r as n,o as a,c as r,a as s,w as c,b as i,e as _}from"./index-305db2e2.js";const d=o({name:"Login"}),l=i("h1",null,"Login",-1);function p(u,f,m,x,h,g){const e=n("router-link");return a(),r("div",null,[l,s(e,{to:"/Ollix-Frontend/register"},{default:c(()=>[_(" Dashboard ")]),_:1})])}const $=t(d,[["render",p]]);export{$ as default};
