@@ -244,7 +244,7 @@ export default defineComponent({
                 }
 
                 const response: any = await axios.post(
-                    'https://localhost:7219/api/auth/register',
+                    'https://hom-ollix-api.azurewebsites.net/api/auth/register',
                     payload
                 )
 
