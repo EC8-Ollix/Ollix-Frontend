@@ -24,7 +24,7 @@ export default defineComponent({
 <style scoped>
 .content-template {
     min-height: fit-content;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .content-template::-webkit-scrollbar {

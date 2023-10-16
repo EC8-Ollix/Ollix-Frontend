@@ -16,8 +16,10 @@
 }
 
 body {
-    margin: 0;
     overflow-y: hidden;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
 }
 
 h1 {
@@ -38,7 +40,7 @@ h1 {
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 6px;
     background-color: #f5f5f5;
 }
 
@@ -88,12 +90,42 @@ li.ant-menu-item-selected span.nav-text {
     width: calc(100% - 3px);
 }
 
+.ant-col.ant-form-item-label {
+    padding: 0 0 3px;
+}
+
+.ant-form-item
+    .ant-form-item-label
+    > label.ant-form-item-required:not(
+        .ant-form-item-required-mark-optional
+    )::before {
+    display: none;
+}
+
+.ant-form-item-explain.ant-form-item-explain-connected.ant-form-show-help {
+    padding-bottom: 2px;
+}
+
+.ant-btn-link {
+    color: #153146;
+}
+
+.ant-btn-link:hover {
+    color: #4d6f89;
+}
+.ant-btn-link:not(:disabled):hover {
+    color: #4d6f89;
+}
+
 @media (prefers-color-scheme: light) {
     :root {
         color: rgba(79, 79, 79, 0.87);
         background-color: #f0f2f5;
     }
     a:hover {
+        color: #4d6f89;
+    }
+    a {
         color: #153146;
     }
     button {

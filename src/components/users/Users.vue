@@ -10,110 +10,144 @@
         <div :style="{ padding: '20px', background: '#fff' }" class="content">
             <a-table
                 :columns="columns"
-                :row-key="recordKey"
-                :data-source="users"
-                :pagination="pagination"
-                :loading="isFetching"
+                :row-key="(record) => record.login.uuid"
+                :data-source="data"
+                :pagination="tableParams.pagination"
+                :loading="loading"
                 @change="handleTableChange"
             >
                 <template #bodyCell="{ column, text }">
-                    <template v-if="column.dataIndex === 'name'"
-                        >{{ text.first }} {{ text.last }}</template
-                    >
+                    <template v-if="column.dataIndex === 'name'">
+                        {{ text.first }} {{ text.last }}
+                    </template>
                 </template>
             </a-table>
         </div>
     </a-layout-content>
 </template>
 
-<script lang="ts" setup>
-import { ref, computed } from 'vue'
-import { useFetch } from '@vueuse/core'
-import type { TablePaginationConfig } from 'ant-design-vue'
+<script lang="ts">
+import { ref, reactive, onMounted, watch, computed } from 'vue'
+import axios from 'axios'
+import { Table } from 'ant-design-vue'
+import type { TablePaginationConfig, TableProps } from 'ant-design-vue'
+import { FilterValue, SorterResult } from 'ant-design-vue/es/table/interface'
 
-const columns = [
-    {
-        title: 'Name',
-        dataIndex: 'name',
-        sorter: true,
-        width: '20%',
-    },
-    {
-        title: 'Gender',
-        dataIndex: 'gender',
-        filters: [
-            { text: 'Male', value: 'male' },
-            { text: 'Female', value: 'female' },
-        ],
-        width: '20%',
-    },
-    {
-        title: 'Email',
-        dataIndex: 'email',
-    },
-]
-
-type APIParams = {
-    results: number
-    page?: number | undefined
-    sortField?: string | undefined
-    sortOrder?: string | undefined
-}
-
-type APIResult = {
-    results: {
-        gender: 'female' | 'male'
-        name: { first: string; last: string }
-        email: string
-    }[]
-    info: {
-        page: number
-        results: number
-        seed: string
-        version: string
+interface DataType {
+    name: {
+        first: string
+        last: string
+    }
+    gender: string
+    email: string
+    login: {
+        uuid: string
     }
 }
 
-const apiParams = ref<APIParams>({ results: 20, page: 1 })
-
-const fetchURL = computed(
-    () =>
-        `https://randomuser.me/api?results=${apiParams.value.results}&page=${apiParams.value.page}`
-)
-
-const {
-    isFetching,
-    data: rawData,
-    execute,
-} = useFetch<string>(fetchURL, { immediate: true })
-
-const data = computed(() => {
-    try {
-        return JSON.parse(rawData.value || '')
-    } catch (e) {
-        console.error('Failed to parse API response:', e)
-        return null
-    }
-})
-
-const users = computed(() => {
-    console.log('Parsed data:', data.value?.results)
-    return data.value?.results || []
-})
-
-const pagination = computed(() => ({
-    total: 200,
-    current: apiParams.value.page,
-    pageSize: apiParams.value.results,
-}))
-
-const handleTableChange = (pagination: TablePaginationConfig) => {
-    apiParams.value.page = pagination.current
-    apiParams.value.results = pagination.pageSize || 0
-    execute()
+interface TableParams {
+    pagination?: { current?: number; pageSize?: number; total?: number }
+    sorter?: { sorterField?: string; sorterOrder?: string }
 }
 
-const recordKey = (record: { login: { uuid: string } }) => record.login.uuid
+export default {
+    name: 'AjaxTable',
+    components: { 'a-table': Table },
+
+    setup() {
+        const data = ref<DataType[]>([])
+        const loading = ref(false)
+        const tableParams = reactive<TableParams>({
+            pagination: {
+                current: 1,
+                pageSize: 10,
+            },
+            sorter: {},
+        })
+
+        const columns = [
+            {
+                title: 'Name',
+                dataIndex: 'name',
+                sorter: true,
+                width: '20%',
+            },
+            {
+                title: 'Gender',
+                dataIndex: 'gender',
+                filters: [
+                    { text: 'Male', value: 'male' },
+                    { text: 'Female', value: 'female' },
+                ],
+                width: '20%',
+            },
+            {
+                title: 'Email',
+                dataIndex: 'email',
+            },
+        ]
+
+        const fetchData = async () => {
+            loading.value = true
+            try {
+                const response = await axios.get(`https://randomuser.me/api?`, {
+                    params: {
+                        results: tableParams.pagination?.pageSize,
+                        page: tableParams.pagination?.current,
+                        ...tableParams,
+                    },
+                })
+
+                data.value = response.data.results
+                tableParams.pagination!.total = 200
+            } catch (error) {
+                console.error('Failed to fetch data:', error)
+            } finally {
+                loading.value = false
+            }
+        }
+
+        onMounted(fetchData)
+
+        watch(() => tableParams, fetchData, { deep: true })
+
+        const handleTableChange = (
+            pagination: TablePaginationConfig,
+            sorter: SorterResult<string> | SorterResult<string>[]
+        ) => {
+            tableParams.pagination = pagination
+
+            let firstSorter: SorterResult<string> = getFirstSorter(sorter)
+
+            tableParams.sorter!.sorterField = firstSorter.field?.toString()
+            tableParams.sorter!.sorterOrder = firstSorter.order?.toString()
+
+            if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+                data.value = []
+            }
+        }
+
+        return {
+            data,
+            loading,
+            tableParams,
+            columns,
+            handleTableChange,
+        }
+
+        function getFirstSorter(
+            sorter: SorterResult<string> | SorterResult<string>[]
+        ) {
+            let firstSorter: SorterResult<string>
+            if (Array.isArray(sorter)) {
+                firstSorter = sorter[0]
+            } else {
+                firstSorter = sorter
+            }
+            return firstSorter
+        }
+    },
+}
 </script>
 
 <style scoped>

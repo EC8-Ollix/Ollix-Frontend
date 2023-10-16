@@ -29,16 +29,18 @@ export default defineComponent({
         const store = useStore()
 
         const user = computed(() => store.state.user)
+        const isLoggedIn = computed(() => store.state.isLoggedIn)
 
         return {
             user,
+            isLoggedIn,
         }
     },
 })
 </script>
 
 <template>
-    <a-layout-header class="header" style="height: 50px">
+    <a-layout-header class="header" style="height: 50px" v-if="isLoggedIn">
         <div class="main-header">
             <a href="/">
                 <div class="logo" />
