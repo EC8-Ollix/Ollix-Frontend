@@ -243,7 +243,7 @@ export default defineComponent({
                     cnpj: clientState.cnpj,
                 }
 
-                const response = await axios.post(
+                const response: any = await axios.post(
                     'https://localhost:7219/api/auth/register',
                     payload
                 )
@@ -255,8 +255,7 @@ export default defineComponent({
                     })
                     await router.push('/Ollix-Frontend/login')
                 }
-            } catch (err) {
-                const error = err as AxiosError
+            } catch (error: any) {
                 notifyError(error)
                 if (error.response) {
                     if (error.response.data.validationErrors) {
