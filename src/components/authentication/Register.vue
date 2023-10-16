@@ -8,7 +8,8 @@ import {
 } from '@ant-design/icons-vue'
 import { Rule } from 'ant-design-vue/es/form'
 import axios from 'axios'
-import { notifyError, notifySuccess } from '../../config/notificationHelper.ts'
+import { AxiosError } from 'axios'
+import { notifyError, notifySuccess } from '../../config/notificationHelper'
 
 interface UserState {
     firstName: string
@@ -122,15 +123,8 @@ export default defineComponent({
             ],
         }
 
-        const handleUserRegistration = async (values: FormState) => {
-            console.error('Estado: ', 2)
+        const handleUserRegistration = async (values: UserState) => {
             currentStep.value = 2
-            // try {
-            //     // Execute API call here
-            //     console.log('API Call with values: ', values)
-            // } catch (error) {
-            //     console.error('API Error: ', error)
-            // }
         }
 
         const handleUserRegistrationFailed = (errors: any) => {
@@ -146,7 +140,7 @@ export default defineComponent({
         })
 
         const formatValue = computed(() => {
-            return formatCNPJ(clientState.cnpj.value)
+            return formatCNPJ(clientState.cnpj)
         })
 
         const formatCNPJ = (value: string) => {
@@ -261,7 +255,8 @@ export default defineComponent({
                     })
                     await router.push('/Ollix-Frontend/login')
                 }
-            } catch (error) {
+            } catch (err) {
+                const error = err as AxiosError
                 notifyError(error)
                 if (error.response) {
                     if (error.response.data.validationErrors) {
