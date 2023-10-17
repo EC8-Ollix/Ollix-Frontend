@@ -3,7 +3,7 @@
         class="pageHeader"
         title="Hélices"
         sub-title="Gerencie suas hélices aqui"
-        @back="() => null"
+        @back="() => $router.go(-1)"
     />
 
     <a-layout-content :style="{ margin: '10px 16px 25px' }">

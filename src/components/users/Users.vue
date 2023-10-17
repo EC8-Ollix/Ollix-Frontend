@@ -3,7 +3,7 @@
         class="pageHeader"
         title="Usuários"
         sub-title="Gerencie os Usuários por aqui"
-        @back="() => null"
+        @back="() => $router.go(-1)"
     />
 
     <a-layout-content :style="{ margin: '10px 16px 25px' }">

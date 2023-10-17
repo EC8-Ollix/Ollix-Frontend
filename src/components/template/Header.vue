@@ -7,6 +7,10 @@ import {
 } from '@ant-design/icons-vue'
 import { Avatar, Dropdown, Menu, Tooltip } from 'ant-design-vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+
+import { SetUserLogout } from '../../config/store'
+import { User } from '../../types/types'
 
 export default defineComponent({
     name: 'Header',
@@ -19,21 +23,21 @@ export default defineComponent({
         ExportOutlined,
         UserOutlined,
     },
-    props: {
-        title: {
-            type: String as PropType<string>,
-            required: true,
-        },
-    },
     setup(props) {
         const store = useStore()
-
-        const user = computed(() => store.state.user)
+        const router = useRouter()
+        const user = computed((): User => store.state.user)
         const isLoggedIn = computed(() => store.state.isLoggedIn)
+
+        const logout = () => {
+            SetUserLogout()
+            router.push('/Ollix-Frontend/auth')
+        }
 
         return {
             user,
             isLoggedIn,
+            logout, // Retorne essa função para que ela possa ser usada no template
         }
     },
 })
@@ -48,7 +52,7 @@ export default defineComponent({
         </div>
 
         <h3 class="title">
-            {{ title }}
+            {{ user.clientApp?.bussinessName }}
         </h3>
 
         <div class="toolbar">
@@ -66,7 +70,7 @@ export default defineComponent({
                             vertical-align: middle;
                             margin-inline: 8px;
                         "
-                        :title="user.name"
+                        :title="user.firstName"
                     >
                         U
                     </a-avatar>
@@ -79,7 +83,7 @@ export default defineComponent({
                             </span>
                             Meu Perfil
                         </a-menu-item>
-                        <a-menu-item key="2">
+                        <a-menu-item key="2" @click="logout">
                             <span style="margin-right: 5px">
                                 <ExportOutlined />
                             </span>

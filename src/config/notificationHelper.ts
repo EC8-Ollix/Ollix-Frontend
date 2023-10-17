@@ -1,12 +1,24 @@
 import { AnyFn } from '@vueuse/core'
 import { notification } from 'ant-design-vue'
 
-export interface Success {
+export interface SuccessModel {
     successTitle: string
     successMessage?: string
 }
 
-export function notifySuccess(success: Success) {
+export interface ErrorModel {
+    errors: string[]
+    validationErrors: ValidationError[]
+}
+
+export interface ValidationError {
+    identifier: string
+    errorMessage: string
+    errorCode: string
+    severity: number
+}
+
+export function notifySuccess(success: SuccessModel) {
     notification['success']({
         message: success.successTitle,
         description: success.successMessage,
@@ -14,34 +26,38 @@ export function notifySuccess(success: Success) {
     })
 }
 
-export function notifyError(error: any, errorTitle?: string) {
-    let message = 'Um erro desconhecido ocorreu'
+export function notifyError(error: ErrorModel, errorTitle?: string) {
+    let message = 'Um erro interno ocorreu!'
 
-    if (
-        error.response &&
-        error.response.status >= 400 &&
-        error.response.status < 500
-    ) {
-        if (
-            error.response.data.validationErrors &&
-            error.response.data.validationErrors.length > 0
-        ) {
-            message = error.response.data.validationErrors
-                .map((err: any) => err.errorMessage)
-                .join(', <br>')
-        } else if (
-            error.response.data.errors &&
-            error.response.data.errors.length > 0
-        ) {
-            message = error.response.data.errors.join(', <br>')
+    var hasValidationErrors =
+        error.validationErrors && error.validationErrors.length > 0
+    var hasErrors = error.errors && error.errors.length > 0
+
+    if (hasValidationErrors) {
+        for (let i = 0; i < error.validationErrors.length; i++) {
+            notification['error']({
+                message: '',
+                description: error.validationErrors[i].errorMessage,
+                duration: 10,
+            })
         }
-    } else if (error.response && error.response.status >= 500) {
-        errorTitle = 'Um erro interno ocorreu'
     }
 
-    notification['error']({
-        message: errorTitle,
-        description: message,
-        duration: 10,
-    })
+    if (hasErrors) {
+        for (let i = 0; i < error.errors.length; i++) {
+            notification['error']({
+                message: '',
+                description: error.errors[i],
+                duration: 10,
+            })
+        }
+    }
+
+    if (!hasErrors && !hasValidationErrors) {
+        notification['error']({
+            message: errorTitle,
+            description: message,
+            duration: 10,
+        })
+    }
 }
