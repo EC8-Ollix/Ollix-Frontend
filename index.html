@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt">
     <head>
+        <script>
+            // Check for the redirect and clean it up.
+            if (sessionStorage.redirect) {
+                delete sessionStorage.redirect
+                history.replaceState(null, null, location.pathname)
+            }
+        </script>
         <meta charset="UTF-8" />
         <link rel="icon" type="image/svg+xml" href="/Ollix-Frontend/logo-ollix-icon.png" />
         <link
@@ -9,7 +16,7 @@
         />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Ollix</title>
-      <script type="module" crossorigin src="/Ollix-Frontend/assets/index-c710ad7e.js"></script>
+      <script type="module" crossorigin src="/Ollix-Frontend/assets/index-63a508a4.js"></script>
       <link rel="stylesheet" href="/Ollix-Frontend/assets/index-4fc059c7.css">
     </head>
     <body>
