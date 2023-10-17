@@ -3,7 +3,7 @@
         class="pageHeader"
         title="Usuários"
         sub-title="Gerencie os Usuários por aqui"
-        @back="() => $router.go(-1)"
+        @back="goBack"
     />
 
     <a-layout-content :style="{ margin: '10px 16px 25px' }">
@@ -33,6 +33,8 @@ import { Table } from 'ant-design-vue'
 import type { TablePaginationConfig, TableProps } from 'ant-design-vue'
 import { FilterValue, SorterResult } from 'ant-design-vue/es/table/interface'
 
+import { useNavigation } from '../../composables/useNavigation'
+
 interface DataType {
     name: {
         first: string
@@ -55,6 +57,8 @@ export default {
     components: { 'a-table': Table },
 
     setup() {
+        const { goBack } = useNavigation()
+
         const data = ref<DataType[]>([])
         const loading = ref(false)
         const tableParams = reactive<TableParams>({
@@ -133,6 +137,7 @@ export default {
             tableParams,
             columns,
             handleTableChange,
+            goBack,
         }
 
         function getFirstSorter(

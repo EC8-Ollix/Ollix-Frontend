@@ -3,7 +3,7 @@
         class="pageHeader"
         title="Hélices"
         sub-title="Gerencie suas hélices aqui"
-        @back="() => $router.go(-1)"
+        @back="goBack"
     />
 
     <a-layout-content :style="{ margin: '10px 16px 25px' }">
@@ -22,6 +22,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, h } from 'vue'
+import { useNavigation } from '../../composables/useNavigation'
 
 interface Helice {
     key: string
@@ -34,6 +35,8 @@ interface Helice {
 export default defineComponent({
     name: 'Helices',
     setup() {
+        const { goBack } = useNavigation()
+
         const generateHelice = (key: number): Helice => ({
             key: key.toString(),
             onOff: Math.random() > 0.5,
@@ -86,7 +89,13 @@ export default defineComponent({
             onChange: updateCurrentPage,
         }
 
-        return { displayedHelices, columns, addHelice, paginationConfig }
+        return {
+            displayedHelices,
+            columns,
+            addHelice,
+            paginationConfig,
+            goBack,
+        }
     },
 })
 </script>
