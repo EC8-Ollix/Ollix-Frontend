@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from './store'
 import { useRouter } from 'vue-router'
+import { SetUserLogout } from '../config/store'
 
 const routes = [
     {
@@ -8,34 +9,34 @@ const routes = [
         path: '/Ollix-Frontend/auth',
         component: () =>
             import('../components/authentication/Authentication.vue'),
-        // mode: 'hash',
+        mode: 'hash',
     },
     {
         name: 'dashboard',
         path: '/Ollix-Frontend/',
         component: () => import('../components/dashboard/Dashboard.vue'),
-        // mode: 'hash',
+        mode: 'hash',
         meta: { requiresAuth: true },
     },
     {
         name: 'helices',
         path: '/Ollix-Frontend/helices',
         component: () => import('../components/helices/Helices.vue'),
-        // mode: 'hash',
+        mode: 'hash',
         meta: { requiresAuth: true },
     },
     {
         name: 'logs',
         path: '/Ollix-Frontend/logs',
         component: () => import('../components/logs/Logs.vue'),
-        // mode: 'hash',
+        mode: 'hash',
         meta: { requiresAuth: true },
     },
     {
         name: 'users',
         path: '/Ollix-Frontend/users',
         component: () => import('../components/users/Users.vue'),
-        // mode: 'hash',
+        mode: 'hash',
         meta: { requiresAuth: true },
     },
     {
@@ -54,10 +55,16 @@ router.beforeEach((to, from, next) => {
     const isLoggedIn =
         store.getters.isLoggedIn || localStorage.getItem('authToken')
 
-    const router = useRouter()
+    if (isLoggedIn) {
+        let storedExpiration = localStorage.getItem('expiresTokenIn')
+        if (storedExpiration) {
+            let expirationDate = new Date(storedExpiration)
 
-    const goAuth = () => {
-        router.push('/Ollix-Frontend/auth')
+            if (new Date() > expirationDate) {
+                SetUserLogout()
+                next({ name: 'authentication' })
+            }
+        }
     }
 
     let matched = to.matched
@@ -71,7 +78,7 @@ router.beforeEach((to, from, next) => {
         !isLoggedIn
     ) {
         console.log('Para Auth: ', formtMacthed)
-        goAuth()
+        next({ name: 'authentication' })
     } else {
         console.log('Seguiu: ', formtMacthed)
         next()
