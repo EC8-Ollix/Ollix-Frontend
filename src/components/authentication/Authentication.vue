@@ -661,23 +661,23 @@ const wrapperCol = { span: 20 }
 
 @media (max-width: 1500px) {
     .register-container {
-        height: auto;
+        height: 100vh;
     }
 }
 
 @media (max-width: 768px) {
     .register-container {
-        flex-direction: column; /* Stack the background and form vertically */
+        flex-direction: column;
     }
 
     .background {
-        display: none; /* Hide the background on mobile */
+        display: none;
     }
 
     .register-form {
-        height: 100%;
+        /* height: 100%; */
         width: 100%;
-        padding: 20px; /* Reduce padding for mobile */
+        padding: 20px;
     }
 }
 
