@@ -8,41 +8,40 @@ const routes = [
         path: '/Ollix-Frontend/auth',
         component: () =>
             import('../components/authentication/Authentication.vue'),
-        mode: 'hash',
+        // mode: 'hash',
     },
     {
         name: 'dashboard',
         path: '/Ollix-Frontend/',
         component: () => import('../components/dashboard/Dashboard.vue'),
-        mode: 'hash',
+        // mode: 'hash',
         meta: { requiresAuth: true },
     },
     {
         name: 'helices',
         path: '/Ollix-Frontend/helices',
         component: () => import('../components/helices/Helices.vue'),
-        mode: 'hash',
+        // mode: 'hash',
         meta: { requiresAuth: true },
     },
     {
         name: 'logs',
         path: '/Ollix-Frontend/logs',
         component: () => import('../components/logs/Logs.vue'),
-        mode: 'hash',
+        // mode: 'hash',
         meta: { requiresAuth: true },
     },
     {
         name: 'users',
         path: '/Ollix-Frontend/users',
         component: () => import('../components/users/Users.vue'),
-        mode: 'hash',
+        // mode: 'hash',
         meta: { requiresAuth: true },
     },
     {
+        path: '/:pathMatch(.*)*',
         name: 'notfound',
-        path: '/Ollix-Frontend/notfound',
         component: () => import('../components/template/NotExistPage.vue'),
-        mode: 'hash',
     },
 ]
 
@@ -62,18 +61,19 @@ router.beforeEach((to, from, next) => {
     }
 
     let matched = to.matched
+    let formtMacthed = from
 
     if (!matched.some((route) => route.name)) {
         next({ name: 'notfound' })
-        console.log('Não encontrado: ', matched)
+        console.log('Não encontrado: ', formtMacthed)
     } else if (
         to.matched.some((route) => route.meta.requiresAuth) &&
         !isLoggedIn
     ) {
-        console.log('Para Auth: ', matched)
+        console.log('Para Auth: ', formtMacthed)
         goAuth()
     } else {
-        console.log('Seguiu: ', matched)
+        console.log('Seguiu: ', formtMacthed)
         next()
     }
 })
