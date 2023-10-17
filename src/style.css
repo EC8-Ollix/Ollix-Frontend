@@ -131,9 +131,15 @@ select:-webkit-autofill:focus,
 select:-webkit-autofill:active {
     background-color: #fff;
 
-    -webkit-text-fill-color: #000;
+    -webkit-text-fill-color: rgba(0, 0, 0, 0.88);
 
     transition: background-color 5000s ease-in-out 0s;
+}
+
+input,
+select,
+text {
+    color: rgba(0, 0, 0, 0.88);
 }
 
 @media (prefers-color-scheme: light) {
