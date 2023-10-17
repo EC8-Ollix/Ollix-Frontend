@@ -37,7 +37,7 @@ export default defineComponent({
         return {
             user,
             isLoggedIn,
-            logout, // Retorne essa função para que ela possa ser usada no template
+            logout,
         }
     },
 })
@@ -52,7 +52,7 @@ export default defineComponent({
         </div>
 
         <h3 class="title">
-            {{ user.clientApp?.bussinessName }}
+            {{ user?.clientApp?.bussinessName }}
         </h3>
 
         <div class="toolbar">
@@ -70,7 +70,7 @@ export default defineComponent({
                             vertical-align: middle;
                             margin-inline: 8px;
                         "
-                        :title="user.firstName"
+                        :title="user?.firstName"
                     >
                         U
                     </a-avatar>

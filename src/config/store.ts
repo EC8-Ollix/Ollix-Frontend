@@ -24,7 +24,10 @@ export function SetUserLoggedIn(userloginResponse: UserloginResponse) {
 
     store.dispatch('loginUser', userloginResponse)
 
+    let expiresTime = new Date(new Date().getTime() + 4 * 60 * 60 * 1000)
+
     localStorage.setItem('authToken', userloginResponse.token)
+    localStorage.setItem('expiresTokenIn', expiresTime.toISOString())
     localStorage.setItem('authUser', JSON.stringify(userloginResponse.user))
 
     setAuthToken(userloginResponse.token)
@@ -34,6 +37,7 @@ export function SetUserLogout() {
     store.dispatch('logOutUser')
 
     localStorage.removeItem('authToken')
+    localStorage.removeItem('expiresTokenIn')
     localStorage.removeItem('authUser')
 
     removeAuthToken()
