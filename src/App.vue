@@ -30,7 +30,7 @@ export default defineComponent({
         }"
     >
         <a-layout style="height: 100vh">
-            <Header title="Cliente 1" />
+            <Header />
 
             <a-layout>
                 <Sidebar />

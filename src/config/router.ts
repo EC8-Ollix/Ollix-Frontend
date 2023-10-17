@@ -3,40 +3,39 @@ import store from './store'
 
 const routes = [
     {
-        name: 'login',
-        path: '/Ollix-Frontend/login',
-        component: () => import('../components/authentication/Login.vue'),
-        mode: 'hash',
-    },
-    {
-        name: 'register',
-        path: '/Ollix-Frontend/register',
-        component: () => import('../components/authentication/Register.vue'),
+        name: 'authentication',
+        path: '/Ollix-Frontend/auth',
+        component: () =>
+            import('../components/authentication/Authentication.vue'),
         mode: 'hash',
     },
     {
         name: 'dashboard',
-        path: '/Ollix-Frontend',
+        path: '/Ollix-Frontend/',
         component: () => import('../components/dashboard/Dashboard.vue'),
         mode: 'hash',
+        meta: { requiresAuth: true },
     },
     {
         name: 'helices',
         path: '/Ollix-Frontend/helices',
         component: () => import('../components/helices/Helices.vue'),
         mode: 'hash',
+        meta: { requiresAuth: true },
     },
     {
         name: 'logs',
         path: '/Ollix-Frontend/logs',
         component: () => import('../components/logs/Logs.vue'),
         mode: 'hash',
+        meta: { requiresAuth: true },
     },
     {
         name: 'users',
         path: '/Ollix-Frontend/users',
         component: () => import('../components/users/Users.vue'),
         mode: 'hash',
+        meta: { requiresAuth: true },
     },
 ]
 
@@ -46,15 +45,11 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const isLoggedIn = store.getters.isLoggedIn
-    const user = store.getters.user
+    const isLoggedIn =
+        store.getters.isLoggedIn || localStorage.getItem('authToken')
 
-    if (
-        to.name !== 'login' &&
-        to.name !== 'register' &&
-        (!isLoggedIn || !user)
-    ) {
-        next({ name: 'login' })
+    if (to.matched.some((route) => route.meta.requiresAuth) && !isLoggedIn) {
+        next({ name: 'authentication' })
     } else {
         next()
     }

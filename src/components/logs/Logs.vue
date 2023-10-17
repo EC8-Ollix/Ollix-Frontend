@@ -3,7 +3,7 @@
         class="pageHeader"
         title="Logs"
         sub-title="Gerencie seus logs aqui"
-        @back="() => null"
+        @back="() => $router.go(-1)"
     />
 
     <a-layout-content :style="{ margin: '10px 16px 25px' }">

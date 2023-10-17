@@ -45,7 +45,7 @@ export default defineComponent({
 
 function getKeyFromRoute(path: string): string {
     switch (path) {
-        case '/Ollix-Frontend':
+        case '/Ollix-Frontend/':
             return '1'
         case '/Ollix-Frontend/helices':
             return '2'
@@ -82,7 +82,7 @@ function getKeyFromRoute(path: string): string {
             <a-menu-item key="2">
                 <ControlOutlined />
                 <span class="nav-text">
-                    <router-link to="/Ollix-Frontend/helices/">
+                    <router-link to="/Ollix-Frontend/helices">
                         Hélices
                     </router-link>
                 </span>
@@ -90,13 +90,13 @@ function getKeyFromRoute(path: string): string {
             <a-menu-item key="3">
                 <DatabaseOutlined />
                 <span class="nav-text">
-                    <router-link to="/Ollix-Frontend/logs/"> Logs </router-link>
+                    <router-link to="/Ollix-Frontend/logs"> Logs </router-link>
                 </span>
             </a-menu-item>
             <a-menu-item key="4">
                 <UsergroupDeleteOutlined />
                 <span class="nav-text">
-                    <router-link to="/Ollix-Frontend/users/">
+                    <router-link to="/Ollix-Frontend/users">
                         Usuários
                     </router-link>
                 </span>
