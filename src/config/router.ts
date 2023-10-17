@@ -61,14 +61,19 @@ router.beforeEach((to, from, next) => {
         router.push('/Ollix-Frontend/auth')
     }
 
-    if (!to.matched.some((route) => route.name)) {
+    let matched = to.matched
+
+    if (!matched.some((route) => route.name)) {
         next({ name: 'notfound' })
+        console.log('Não encontrado: ', matched)
     } else if (
         to.matched.some((route) => route.meta.requiresAuth) &&
         !isLoggedIn
     ) {
+        console.log('Para Auth: ', matched)
         goAuth()
     } else {
+        console.log('Seguiu: ', matched)
         next()
     }
 })
