@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from './store'
+import { useRouter } from 'vue-router'
 
 const routes = [
     {
@@ -37,6 +38,12 @@ const routes = [
         mode: 'hash',
         meta: { requiresAuth: true },
     },
+    {
+        name: 'notfound',
+        path: '/Ollix-Frontend/notfound',
+        component: () => import('../components/template/NotExistPage.vue'),
+        mode: 'hash',
+    },
 ]
 
 const router = createRouter({
@@ -48,8 +55,19 @@ router.beforeEach((to, from, next) => {
     const isLoggedIn =
         store.getters.isLoggedIn || localStorage.getItem('authToken')
 
-    if (to.matched.some((route) => route.meta.requiresAuth) && !isLoggedIn) {
-        next({ name: 'authentication' })
+    const router = useRouter()
+
+    const goAuth = () => {
+        router.push('/Ollix-Frontend/auth')
+    }
+
+    if (!to.matched.some((route) => route.name)) {
+        next({ name: 'notfound' })
+    } else if (
+        to.matched.some((route) => route.meta.requiresAuth) &&
+        !isLoggedIn
+    ) {
+        goAuth()
     } else {
         next()
     }
