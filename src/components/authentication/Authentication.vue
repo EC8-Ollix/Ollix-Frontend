@@ -624,7 +624,7 @@ const wrapperCol = { span: 20 }
 }
 
 .register-form {
-    flex: 1;
+    flex: 0.8;
     padding: 50px;
     background: white;
     display: flex;
