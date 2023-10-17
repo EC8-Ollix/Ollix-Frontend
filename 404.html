@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
     <head>
-        <script>
-            // Check for the redirect and clean it up.
-            if (sessionStorage.redirect) {
-                delete sessionStorage.redirect
-                history.replaceState(null, null, location.pathname)
-            }
-        </script>
         <meta charset="UTF-8" />
         <link rel="icon" type="image/svg+xml" href="/logo-ollix-icon.png" />
         <link
@@ -18,6 +11,10 @@
         <title>Ollix</title>
     </head>
     <body>
+        <script>
+            // This will cause the triggering of the "popstate" event, making Vue Router handle the routing.
+            sessionStorage.redirect = location.href
+        </script>
         <div id="app"></div>
         <script type="module" src="/src/main.ts"></script>
     </body>

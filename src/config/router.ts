@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import store from './store'
 import { useRouter } from 'vue-router'
 import { SetUserLogout } from '../config/store'
@@ -47,7 +47,7 @@ const routes = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory('/Ollix-Frontend/'),
     routes,
 })
 
