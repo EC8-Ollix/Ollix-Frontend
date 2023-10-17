@@ -7,7 +7,7 @@ export default defineComponent({
         const router = useRouter()
 
         const gotHome = () => {
-            router.push('/Ollix-Frontend/auth')
+            router.push('/auth')
         }
 
         return {

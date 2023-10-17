@@ -45,13 +45,13 @@ export default defineComponent({
 
 function getKeyFromRoute(path: string): string {
     switch (path) {
-        case '/Ollix-Frontend/':
+        case '/':
             return '1'
-        case '/Ollix-Frontend/helices':
+        case '/helices':
             return '2'
-        case '/Ollix-Frontend/logs':
+        case '/logs':
             return '3'
-        case '/Ollix-Frontend/users':
+        case '/users':
             return '4'
         default:
             return '1'
@@ -76,29 +76,25 @@ function getKeyFromRoute(path: string): string {
             <a-menu-item key="1">
                 <AreaChartOutlined />
                 <span class="nav-text">
-                    <router-link to="/Ollix-Frontend/"> Dashboard </router-link>
+                    <router-link to="/"> Dashboard </router-link>
                 </span>
             </a-menu-item>
             <a-menu-item key="2">
                 <ControlOutlined />
                 <span class="nav-text">
-                    <router-link to="/Ollix-Frontend/helices">
-                        Hélices
-                    </router-link>
+                    <router-link to="/helices"> Hélices </router-link>
                 </span>
             </a-menu-item>
             <a-menu-item key="3">
                 <DatabaseOutlined />
                 <span class="nav-text">
-                    <router-link to="/Ollix-Frontend/logs"> Logs </router-link>
+                    <router-link to="/logs"> Logs </router-link>
                 </span>
             </a-menu-item>
             <a-menu-item key="4">
                 <UsergroupDeleteOutlined />
                 <span class="nav-text">
-                    <router-link to="/Ollix-Frontend/users">
-                        Usuários
-                    </router-link>
+                    <router-link to="/users"> Usuários </router-link>
                 </span>
             </a-menu-item>
         </a-menu>

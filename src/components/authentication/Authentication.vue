@@ -97,7 +97,7 @@ export default defineComponent({
 
                 SetUserLoggedIn(loginResponse)
 
-                await router.push('/Ollix-Frontend/')
+                await router.push('/')
             } catch (error: any) {
                 let erroModel: ErrorModel = error.response.data
                 loading.value = false

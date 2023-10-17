@@ -31,7 +31,7 @@ export default defineComponent({
 
         const logout = () => {
             SetUserLogout()
-            router.push('/Ollix-Frontend/auth')
+            router.push('/auth')
         }
 
         return {

@@ -3,7 +3,7 @@
         class="pageHeader"
         title="Bem vindo ao Ollix!"
         sub-title="Lorem ipsum dolor sit amet"
-        @back="() => $router.go(-1)"
+        @back="goBack"
     />
 
     <a-layout-content :style="{ margin: '10px 16px 25px' }">
@@ -17,16 +17,19 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue'
 import { useStore } from 'vuex'
+import { useNavigation } from '../../composables/useNavigation'
 
 export default defineComponent({
     name: 'Dashboard',
     setup(props) {
         const store = useStore()
+        const { goBack } = useNavigation()
 
         const user = computed(() => store.state.user)
 
         return {
             user,
+            goBack,
         }
     },
 })
