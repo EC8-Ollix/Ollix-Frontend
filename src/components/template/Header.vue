@@ -70,7 +70,7 @@ export default defineComponent({
                             vertical-align: middle;
                             margin-inline: 8px;
                         "
-                        :title="user.name"
+                        :title="user.firstName"
                     >
                         U
                     </a-avatar>
