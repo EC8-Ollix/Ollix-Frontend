@@ -30,8 +30,8 @@ export function notifyError(error: ErrorModel, errorTitle?: string) {
     let message = 'Um erro interno ocorreu!'
 
     var hasValidationErrors =
-        error.validationErrors && error.validationErrors.length > 0
-    var hasErrors = error.errors && error.errors.length > 0
+        error?.validationErrors && error.validationErrors.length > 0
+    var hasErrors = error?.errors && error.errors.length > 0
 
     if (hasValidationErrors) {
         for (let i = 0; i < error.validationErrors.length; i++) {

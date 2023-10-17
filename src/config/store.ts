@@ -8,24 +8,21 @@ interface State {
     token?: string
 }
 
-const savedToken = localStorage.getItem('authToken')
-const savedUser = localStorage.getItem('authUser')
-
-let initialState: State = {
-    isLoggedIn: !!savedToken,
-    token: savedToken || '',
-    user: savedUser ? JSON.parse(savedUser) : undefined,
+const initialState: State = {
+    isLoggedIn: !!localStorage.getItem('authToken'),
+    token: localStorage.getItem('authToken') || '',
+    user: localStorage.getItem('authUser')
+        ? JSON.parse(localStorage.getItem('authUser') as string)
+        : undefined,
 }
 
 const state: State = initialState
 
 export function SetUserLoggedIn(userloginResponse: UserloginResponse) {
     SetUserLogout()
-
     store.dispatch('loginUser', userloginResponse)
 
-    let expiresTime = new Date(new Date().getTime() + 4 * 60 * 60 * 1000)
-
+    const expiresTime = new Date(new Date().getTime() + 4 * 60 * 60 * 1000)
     localStorage.setItem('authToken', userloginResponse.token)
     localStorage.setItem('expiresTokenIn', expiresTime.toISOString())
     localStorage.setItem('authUser', JSON.stringify(userloginResponse.user))

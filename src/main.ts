@@ -5,7 +5,7 @@ import 'ant-design-vue/dist/reset.css'
 import './style.css'
 import store from './config/store'
 import router from './config/router'
-import { notifyError, notifySuccess } from './config/notificationHelper'
+import { notifyError, notifySuccess } from './config/notification'
 
 const app = createApp(App).use(store).use(router)
 

@@ -1,18 +1,22 @@
 <script lang="ts">
 import { reactive, ref, defineComponent, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { Rule } from 'ant-design-vue/es/form'
+import { api } from '../../api/api'
+import { SetUserLoggedIn } from '../../config/store'
+
 import {
     UserOutlined,
     LockOutlined,
     ArrowLeftOutlined,
 } from '@ant-design/icons-vue'
-import { Rule } from 'ant-design-vue/es/form'
-import { api } from '../../api/api'
+
 import {
     notifyError,
     notifySuccess,
     ErrorModel,
-} from '../../config/notificationHelper'
+} from '../../config/notification'
+
 import {
     UserloginResponse,
     ClientRegisterRequest,
@@ -20,22 +24,21 @@ import {
     UserRegisterRequest,
 } from '../../types/types'
 
-import { SetUserLoggedIn } from '../../config/store'
-
 export default defineComponent({
     name: 'Authentication',
     setup() {
         const isLogin = ref<Boolean>(true)
+        const router = useRouter()
+        const currentStep = ref(1)
+        const loading = ref<boolean>(false)
+
         const tooggleLoginRegister = () => {
             isLogin.value = !isLogin.value
         }
 
-        const userLoginFormRef = ref()
-
-        const userLoginState: UserLoginRequest = reactive({
-            userEmail: '',
-            password: '',
-        })
+        const goBack = () => {
+            currentStep.value = 1
+        }
 
         const validatePassword = (rule: Rule, value: string) => {
             if (value === '') {
@@ -54,6 +57,13 @@ export default defineComponent({
                 return Promise.resolve()
             }
         }
+
+        const userLoginFormRef = ref()
+
+        const userLoginState: UserLoginRequest = reactive({
+            userEmail: '',
+            password: '',
+        })
 
         const userLoginRules: Record<string, Rule[]> = {
             userEmail: [
@@ -99,20 +109,13 @@ export default defineComponent({
 
                 await router.push('/')
             } catch (error: any) {
-                let erroModel: ErrorModel = error.response.data
+                let erroModel: ErrorModel = error?.response?.data
                 loading.value = false
                 notifyError(erroModel)
             }
         }
 
         const handleUserLoginFailed = (errors: any) => {}
-
-        const currentStep = ref(1)
-        const router = useRouter()
-
-        const goBack = () => {
-            currentStep.value = 1
-        }
 
         const userFormRef = ref()
 
@@ -194,10 +197,6 @@ export default defineComponent({
             companyName: '',
             bussinessName: '',
             cnpj: '',
-        })
-
-        const formatValue = computed(() => {
-            return formatCNPJ(clientState.cnpj)
         })
 
         const formatCNPJ = (value: string) => {
@@ -288,8 +287,6 @@ export default defineComponent({
             ],
         }
 
-        const loading = ref<boolean>(false)
-
         const handleClientRegistration = async () => {
             try {
                 loading.value = true
@@ -352,6 +349,7 @@ export default defineComponent({
             handleClientRegistration,
             handleClientRegistrationFailed,
             onInput,
+            clientFormRef,
             userLoginFormRef,
             userLoginState,
             userLoginRules,
@@ -365,9 +363,6 @@ export default defineComponent({
         ArrowLeftOutlined,
     },
 })
-
-const labelCol = { style: { width: '150px' } }
-const wrapperCol = { span: 20 }
 </script>
 
 <template>
@@ -686,4 +681,4 @@ const wrapperCol = { span: 20 }
     margin-top: 10px;
 }
 </style>
-../../api/api
+../../api/api ../../config/notification
