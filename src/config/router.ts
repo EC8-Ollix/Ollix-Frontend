@@ -13,7 +13,7 @@ const routes = [
         name: 'dashboard',
         path: '/',
         component: () => import('../components/dashboard/Dashboard.vue'),
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, justClient: true },
     },
     {
         name: 'admin',
@@ -31,13 +31,13 @@ const routes = [
         name: 'orders',
         path: '/orders',
         component: () => import('../components/orders/Orders.vue'),
-        meta: { requiresAuth: true, justAdmin: true },
+        meta: { requiresAuth: true },
     },
     {
         name: 'helices',
         path: '/helices',
         component: () => import('../components/helices/Helices.vue'),
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, justClient: true },
     },
     {
         name: 'logs',
@@ -83,7 +83,9 @@ router.beforeEach((to, from, next) => {
         return next({ name: from.name?.toString() })
     }
 
-    if (to.matched.some((route) => !route.name)) {
+    if (store.getters.isAdmin && to.fullPath == '/') {
+        return next({ name: 'admin' })
+    } else if (to.matched.some((route) => !route.name)) {
         return next({ name: 'notfound' })
     } else if (
         to.matched.some((route) => route.meta.requiresAuth) &&
@@ -93,7 +95,7 @@ router.beforeEach((to, from, next) => {
     } else if (
         (to.matched.some((route) => route.meta.justAdmin) &&
             !store.getters.isAdmin) ||
-        (to.matched.some((route) => !route.meta.justAdmin) &&
+        (to.matched.some((route) => route.meta.justClient) &&
             store.getters.isAdmin)
     ) {
         return next({ name: 'notfound' })

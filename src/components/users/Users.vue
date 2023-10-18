@@ -53,7 +53,7 @@ interface TableParams {
 }
 
 export default {
-    name: 'AjaxTable',
+    name: 'Users',
     components: { 'a-table': Table },
 
     setup() {
