@@ -20,13 +20,15 @@
                     </template>
                     <template v-else-if="column.dataIndex === 'active'">
                         <a-popconfirm
-                            @confirm="toggleActive(record)"
+                            @confirm="toggleActive(record as ClientsData)"
                             title="Tem certeza que deseja desativar esse cliente?"
                         >
                             <a-switch
                                 :checked="record.active"
                                 :loading="record.isLoading"
-                                @change="handleSwitchChange(record)"
+                                @change="
+                                    handleSwitchChange(record as ClientsData)
+                                "
                             ></a-switch>
                         </a-popconfirm>
                     </template>
@@ -61,9 +63,13 @@ import { useNavigation } from '../../composables/useNavigation'
 import { Table } from 'ant-design-vue'
 import type { TablePaginationConfig } from 'ant-design-vue'
 
-import { api } from '../../api/api.ts'
-import { PaginationRequest, PaginationResponse, ClientsData } from '../../types'
-import { ErrorModel, notifyError } from '../../config/notification.ts'
+import { api } from '../../api/api'
+import {
+    PaginationRequest,
+    PaginationResponse,
+    ClientsData,
+} from '../../types/types'
+import { ErrorModel, notifyError } from '../../config/notification'
 
 export default defineComponent({
     name: 'Clients',

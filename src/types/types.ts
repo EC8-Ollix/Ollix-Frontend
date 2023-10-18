@@ -1,5 +1,4 @@
 ///Generic Types
-import { reactive } from 'vue';
 export interface PaginationRequest {
     page: number
     pageSize: number
@@ -12,7 +11,7 @@ export interface PaginationResponse<T> {
     pageSize: number
     totalRecords: number
     totalPages: number
-    data: reactive(T[])
+    data: T[]
 }
 
 //---------------------------------------------
