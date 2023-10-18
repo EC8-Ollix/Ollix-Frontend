@@ -7,7 +7,7 @@ export default defineComponent({
         const router = useRouter()
 
         const gotHome = () => {
-            router.push('/auth')
+            router.push('/')
         }
 
         return {
@@ -22,6 +22,7 @@ export default defineComponent({
         status="404"
         title="404"
         sub-title="Desculpe, essa página que você acessou não existe"
+        style="height: calc(100vh - 60px); margin: 100px"
     >
         <template #extra>
             <a-button @click="gotHome" type="primary"

@@ -3,7 +3,7 @@ import { reactive, ref, defineComponent, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { Rule } from 'ant-design-vue/es/form'
 import { api } from '../../api/api'
-import { SetUserLoggedIn } from '../../config/store'
+import store, { SetUserLoggedIn } from '../../config/store'
 
 import {
     UserOutlined,
@@ -107,7 +107,11 @@ export default defineComponent({
 
                 SetUserLoggedIn(loginResponse)
 
-                await router.push('/')
+                if (store.getters.isAdmin) {
+                    await router.push('/admin')
+                } else {
+                    await router.push('/')
+                }
             } catch (error: any) {
                 let erroModel: ErrorModel = error?.response?.data
                 loading.value = false

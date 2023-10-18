@@ -16,6 +16,24 @@ const routes = [
         meta: { requiresAuth: true },
     },
     {
+        name: 'admin',
+        path: '/admin',
+        component: () => import('../components/dashboard/AdminDashboard.vue'),
+        meta: { requiresAuth: true, justAdmin: true },
+    },
+    {
+        name: 'clients',
+        path: '/clients',
+        component: () => import('../components/clients/Clients.vue'),
+        meta: { requiresAuth: true, justAdmin: true },
+    },
+    {
+        name: 'orders',
+        path: '/orders',
+        component: () => import('../components/orders/Orders.vue'),
+        meta: { requiresAuth: true, justAdmin: true },
+    },
+    {
         name: 'helices',
         path: '/helices',
         component: () => import('../components/helices/Helices.vue'),
@@ -72,6 +90,13 @@ router.beforeEach((to, from, next) => {
         !isLoggedIn
     ) {
         return next({ name: 'authentication' })
+    } else if (
+        (to.matched.some((route) => route.meta.justAdmin) &&
+            !store.getters.isAdmin) ||
+        (to.matched.some((route) => !route.meta.justAdmin) &&
+            store.getters.isAdmin)
+    ) {
+        return next({ name: 'notfound' })
     }
 
     next()

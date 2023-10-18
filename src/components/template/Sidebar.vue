@@ -3,7 +3,10 @@ import {
     AreaChartOutlined,
     ControlOutlined,
     DatabaseOutlined,
-    UsergroupDeleteOutlined,
+    TeamOutlined,
+    AuditOutlined,
+    ContactsOutlined,
+    ProfileOutlined,
 } from '@ant-design/icons-vue'
 import { defineComponent, ref, watch, computed } from 'vue'
 import { useStore } from 'vuex'
@@ -14,6 +17,8 @@ export default defineComponent({
     setup(props) {
         const store = useStore()
         const isLoggedIn = computed(() => store.state.isLoggedIn)
+
+        const isAdmin = computed(() => store.getters.isAdmin)
 
         const route = useRoute()
         const selectedKeys = ref<string[]>([getKeyFromRoute(route.path)])
@@ -33,13 +38,17 @@ export default defineComponent({
             onCollapse,
             onBreakpoint,
             isLoggedIn,
+            isAdmin,
         }
     },
     components: {
         AreaChartOutlined,
         ControlOutlined,
         DatabaseOutlined,
-        UsergroupDeleteOutlined,
+        TeamOutlined,
+        AuditOutlined,
+        ContactsOutlined,
+        ProfileOutlined,
     },
 })
 
@@ -47,12 +56,18 @@ function getKeyFromRoute(path: string): string {
     switch (path) {
         case '/':
             return '1'
-        case '/helices':
+        case '/clients':
             return '2'
-        case '/logs':
+        case '/helices':
             return '3'
-        case '/users':
+        case '/logs':
             return '4'
+        case '/users':
+            return '5'
+        case '/orders':
+            return '6'
+        case '/admin':
+            return '7'
         default:
             return '1'
     }
@@ -73,26 +88,44 @@ function getKeyFromRoute(path: string): string {
             mode="inline"
             :style="{ borderRight: 0 }"
         >
-            <a-menu-item key="1">
+            <a-menu-item key="1" v-if="!isAdmin">
                 <AreaChartOutlined />
                 <span class="nav-text">
                     <router-link to="/"> Dashboard </router-link>
                 </span>
             </a-menu-item>
-            <a-menu-item key="2">
+            <a-menu-item key="7" v-if="isAdmin">
+                <AreaChartOutlined />
+                <span class="nav-text">
+                    <router-link to="/admin"> Dashboard </router-link>
+                </span>
+            </a-menu-item>
+            <a-menu-item key="6" v-if="isAdmin">
+                <ProfileOutlined />
+                <span class="nav-text">
+                    <router-link to="/orders"> Pedidos </router-link>
+                </span>
+            </a-menu-item>
+            <a-menu-item key="2" v-if="isAdmin">
+                <ContactsOutlined />
+                <span class="nav-text">
+                    <router-link to="/clients"> Clientes </router-link>
+                </span>
+            </a-menu-item>
+            <a-menu-item key="3" v-if="!isAdmin">
                 <ControlOutlined />
                 <span class="nav-text">
                     <router-link to="/helices"> Hélices </router-link>
                 </span>
             </a-menu-item>
-            <a-menu-item key="3">
-                <DatabaseOutlined />
+            <a-menu-item key="4">
+                <AuditOutlined />
                 <span class="nav-text">
                     <router-link to="/logs"> Logs </router-link>
                 </span>
             </a-menu-item>
-            <a-menu-item key="4">
-                <UsergroupDeleteOutlined />
+            <a-menu-item key="5">
+                <TeamOutlined />
                 <span class="nav-text">
                     <router-link to="/users"> Usuários </router-link>
                 </span>

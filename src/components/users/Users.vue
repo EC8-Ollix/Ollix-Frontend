@@ -16,6 +16,7 @@
                 :loading="loading"
                 @change="handleTableChange"
             >
+
                 <template #bodyCell="{ column, text }">
                     <template v-if="column.dataIndex === 'name'">
                         {{ text.first }} {{ text.last }}
