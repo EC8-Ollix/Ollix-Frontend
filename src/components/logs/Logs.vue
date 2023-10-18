@@ -31,7 +31,7 @@ interface Helice {
 }
 
 export default defineComponent({
-    name: 'Helices',
+    name: 'Logs',
     setup() {
         const { goBack } = useNavigation()
 
