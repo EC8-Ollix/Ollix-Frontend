@@ -7,16 +7,10 @@
     />
 
     <a-layout-content :style="{ margin: '10px 16px 25px' }">
-        <div :style="{ padding: '20px', background: '#fff' }" class="content">
-            <a-button @click="addHelice">Adicionar Hélice</a-button>
-            <a-divider />
-            <h3>Lista de Hélices</h3>
-            <a-table
-                :dataSource="displayedHelices"
-                :columns="columns"
-                :pagination="paginationConfig"
-            ></a-table>
-        </div>
+        <div
+            :style="{ padding: '20px', background: '#fff' }"
+            class="content"
+        ></div>
     </a-layout-content>
 </template>
 

@@ -1,6 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import store from './store'
-import { useRouter } from 'vue-router'
 import { SetUserLogout } from '../config/store'
 
 const routes = [
@@ -15,6 +14,24 @@ const routes = [
         path: '/',
         component: () => import('../components/dashboard/Dashboard.vue'),
         meta: { requiresAuth: true },
+    },
+    {
+        name: 'admin',
+        path: '/admin',
+        component: () => import('../components/dashboard/AdminDashboard.vue'),
+        meta: { requiresAuth: true, justAdmin: true },
+    },
+    {
+        name: 'clients',
+        path: '/clients',
+        component: () => import('../components/clients/Clients.vue'),
+        meta: { requiresAuth: true, justAdmin: true },
+    },
+    {
+        name: 'orders',
+        path: '/orders',
+        component: () => import('../components/orders/Orders.vue'),
+        meta: { requiresAuth: true, justAdmin: true },
     },
     {
         name: 'helices',
@@ -49,36 +66,40 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const isLoggedIn =
         store.getters.isLoggedIn || localStorage.getItem('authToken')
+    let isTokenExpired = false
 
-    if (isLoggedIn) {
-        let storedExpiration = localStorage.getItem('expiresTokenIn')
-
-        if (storedExpiration) {
-            let expirationDate = new Date(storedExpiration)
-
-            if (new Date() > expirationDate) {
-                SetUserLogout()
-                next({ name: 'authentication' })
-            }
-        }
-
-        if (from.fullPath !== '/auth' && to.fullPath === '/auth') {
-            next({ name: from.name?.toString() })
-        }
+    const storedExpiration = localStorage.getItem('expiresTokenIn')
+    if (storedExpiration) {
+        const expirationDate = new Date(storedExpiration)
+        isTokenExpired = new Date() > expirationDate
     }
 
-    let matched = to.matched
+    if (isLoggedIn && isTokenExpired) {
+        SetUserLogout()
+        return next({ name: 'authentication' })
+    }
 
-    if (!matched.some((route) => route.name)) {
-        next({ name: 'notfound' })
+    if (isLoggedIn && from.fullPath !== '/auth' && to.fullPath === '/auth') {
+        return next({ name: from.name?.toString() })
+    }
+
+    if (to.matched.some((route) => !route.name)) {
+        return next({ name: 'notfound' })
     } else if (
         to.matched.some((route) => route.meta.requiresAuth) &&
         !isLoggedIn
     ) {
-        next({ name: 'authentication' })
-    } else {
-        next()
+        return next({ name: 'authentication' })
+    } else if (
+        (to.matched.some((route) => route.meta.justAdmin) &&
+            !store.getters.isAdmin) ||
+        (to.matched.some((route) => !route.meta.justAdmin) &&
+            store.getters.isAdmin)
+    ) {
+        return next({ name: 'notfound' })
     }
+
+    next()
 })
 
 export default router
