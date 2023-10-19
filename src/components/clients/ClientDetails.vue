@@ -60,7 +60,7 @@
 import { defineComponent, ref, PropType, onMounted } from 'vue'
 import { AppleOutlined, AndroidOutlined } from '@ant-design/icons-vue'
 import { useNavigation } from '../../composables/useNavigation'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { api } from '../../api/api'
 import { ClientsData } from '../../types/types'
 import { ErrorModel, notifyError } from '../../config/notification'
@@ -84,10 +84,21 @@ export default defineComponent({
         },
     },
     setup() {
-        const { goBack } = useNavigation()
         const activeKey = ref('1')
         const route = useRoute()
         const clientData = ref<ClientsData>()
+
+        const router = useRouter()
+        function goBack() {
+            if (route.query.pagination) {
+                router.push({
+                    path: '/clients',
+                    query: { pagination: route.query.pagination },
+                })
+            } else {
+                router.push({ path: '/clients' })
+            }
+        }
 
         onMounted(async () => {
             try {

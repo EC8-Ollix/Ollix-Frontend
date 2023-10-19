@@ -44,7 +44,18 @@
                             </a-popconfirm>
                         </template>
                         <template v-else-if="column.dataIndex === 'actions'">
-                            <router-link :to="`/clients/${record.id}`">
+                            <!-- <router-link :to="`/clients/${record.id}`">
+                                <a-button size="small">Detalhes</a-button>
+                            </router-link> -->
+                            <router-link
+                                :to="{
+                                    name: 'clientDetails',
+                                    params: { clientId: record.id },
+                                    query: {
+                                        pagination: JSON.stringify(pagination),
+                                    },
+                                }"
+                            >
                                 <a-button size="small">Detalhes</a-button>
                             </router-link>
                         </template>
@@ -85,6 +96,7 @@ import {
     ClientsData,
 } from '../../types/types'
 import { ErrorModel, notifyError } from '../../config/notification'
+import { useRoute } from 'vue-router'
 
 export default defineComponent({
     name: 'Clients',
@@ -156,7 +168,15 @@ export default defineComponent({
             }
         }
 
-        onMounted(fetchData)
+        const route = useRoute()
+        onMounted(() => {
+            if (route.query.pagination) {
+                pagination.value = JSON.parse(
+                    route.query.pagination as string
+                ) as PaginationRequest
+            }
+            fetchData()
+        })
 
         watch(pagination, fetchData, { deep: true })
 

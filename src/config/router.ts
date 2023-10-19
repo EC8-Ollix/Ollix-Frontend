@@ -28,7 +28,7 @@ const routes = [
         meta: { requiresAuth: true, justAdmin: true },
     },
     {
-        name: 'clientsById',
+        name: 'clientDetails',
         path: '/clients/:clientId',
         component: () => import('../components/clients/ClientDetails.vue'),
         meta: { requiresAuth: true, justAdmin: true },
