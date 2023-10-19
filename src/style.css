@@ -142,6 +142,9 @@ text {
     color: rgba(0, 0, 0, 0.88);
 }
 
+td.ant-table-cell {
+    font-size: 13px;
+}
 
 @media (prefers-color-scheme: light) {
     :root {

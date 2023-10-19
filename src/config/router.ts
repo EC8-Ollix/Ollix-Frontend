@@ -28,6 +28,12 @@ const routes = [
         meta: { requiresAuth: true, justAdmin: true },
     },
     {
+        name: 'clientsById',
+        path: '/clients/:clientId',
+        component: () => import('../components/clients/ClientDetails.vue'),
+        meta: { requiresAuth: true, justAdmin: true },
+    },
+    {
         name: 'orders',
         path: '/orders',
         component: () => import('../components/orders/Orders.vue'),
@@ -35,7 +41,7 @@ const routes = [
     },
     {
         name: 'helices',
-        path: '/helices',
+        path: '/helices/:clientId',
         component: () => import('../components/helices/Helices.vue'),
         meta: { requiresAuth: true, justClient: true },
     },
@@ -47,7 +53,7 @@ const routes = [
     },
     {
         name: 'users',
-        path: '/users',
+        path: '/users/:clientId',
         component: () => import('../components/users/Users.vue'),
         meta: { requiresAuth: true },
     },
