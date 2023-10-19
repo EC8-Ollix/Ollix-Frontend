@@ -1,10 +1,10 @@
 <template>
-    <a-page-header
-        class="pageHeader"
-        title="Clients"
-        sub-title="Manage your clients here"
-        @back="goBack"
-    />
+    <a-page-header class="pageHeader" title="Cliente" @back="goBack">
+        <div v-if="clientData">
+            Razão Social: {{ clientData.companyName }}
+            <!-- ... other client details ... -->
+        </div>
+    </a-page-header>
 
     <a-layout-content :style="{ margin: '10px 16px 25px' }">
         <div :style="{ padding: '20px', background: '#fff' }" class="content">
@@ -16,7 +16,10 @@
                             Hélices
                         </span>
                     </template>
-                    Hélices aqui
+                    <Helice
+                        :clientId="clientData?.id"
+                        :viaClientScreen="true"
+                    />
                 </a-tab-pane>
                 <a-tab-pane key="2">
                     <template #tab>
@@ -25,7 +28,10 @@
                             Pedidos
                         </span>
                     </template>
-                    Pedidos aqui
+                    <Orders
+                        :clientId="clientData?.id"
+                        :viaClientScreen="true"
+                    />
                 </a-tab-pane>
                 <a-tab-pane key="3">
                     <template #tab>
@@ -34,7 +40,7 @@
                             Usuários
                         </span>
                     </template>
-                    Usuários aqui
+                    <Users :clientId="clientData?.id" :viaClientScreen="true" />
                 </a-tab-pane>
                 <a-tab-pane key="4">
                     <template #tab>
@@ -51,23 +57,65 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, PropType, onMounted } from 'vue'
 import { AppleOutlined, AndroidOutlined } from '@ant-design/icons-vue'
 import { useNavigation } from '../../composables/useNavigation'
+import { useRoute, useRouter } from 'vue-router'
+import { api } from '../../api/api'
+import { ClientsData } from '../../types/types'
+import { ErrorModel, notifyError } from '../../config/notification'
+import Helice from '../helices/Helices.vue'
+import Orders from '../orders/Orders.vue'
+import Users from '../users/Users.vue'
 
 export default defineComponent({
     name: 'ClientDetails',
     components: {
         AppleOutlined,
         AndroidOutlined,
+        Helice,
+        Orders,
+        Users,
+    },
+    props: {
+        clientId: {
+            type: String as PropType<string>,
+            required: true,
+        },
     },
     setup() {
-        const { goBack } = useNavigation()
         const activeKey = ref('1')
+        const route = useRoute()
+        const clientData = ref<ClientsData>()
+
+        const router = useRouter()
+        function goBack() {
+            if (route.query.pagination) {
+                router.push({
+                    path: '/clients',
+                    query: { pagination: route.query.pagination },
+                })
+            } else {
+                router.push({ path: '/clients' })
+            }
+        }
+
+        onMounted(async () => {
+            try {
+                const response = await api.get<ClientsData>(
+                    `/clients/${route.params.clientId}`
+                )
+                clientData.value = response.data
+            } catch (error: any) {
+                let erroModel: ErrorModel = error?.response?.data
+                notifyError(erroModel)
+            }
+        })
 
         return {
             goBack,
             activeKey,
+            clientData,
         }
     },
 })

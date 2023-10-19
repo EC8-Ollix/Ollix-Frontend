@@ -22,9 +22,8 @@ import { useNavigation } from '../../composables/useNavigation'
 export default defineComponent({
     name: 'Dashboard',
     setup(props) {
-        const store = useStore()
         const { goBack } = useNavigation()
-
+        const store = useStore()
         const user = computed(() => store.state.user)
 
         return {

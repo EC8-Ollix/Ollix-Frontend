@@ -11,6 +11,7 @@ import {
 import { defineComponent, ref, watch, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
+import { User } from 'src/types/types'
 
 export default defineComponent({
     name: 'Sidebar',
@@ -18,6 +19,7 @@ export default defineComponent({
         const store = useStore()
         const isLoggedIn = computed(() => store.state.isLoggedIn)
 
+        const user = computed((): User => store.getters.user)
         const isAdmin = computed(() => store.getters.isAdmin)
 
         const route = useRoute()
@@ -39,6 +41,7 @@ export default defineComponent({
             onBreakpoint,
             isLoggedIn,
             isAdmin,
+            user,
         }
     },
     components: {
@@ -53,24 +56,28 @@ export default defineComponent({
 })
 
 function getKeyFromRoute(path: string): string {
-    switch (path) {
-        case '/':
-            return '1'
-        case '/clients':
-            return '2'
-        case '/helices':
-            return '3'
-        case '/logs':
-            return '4'
-        case '/users':
-            return '5'
-        case '/orders':
-            return '6'
-        case '/admin':
-            return '7'
-        default:
-            return '1'
+    if (path.includes('/admin')) {
+        return '7'
     }
+    if (path.includes('/orders')) {
+        return '6'
+    }
+    if (path.includes('/users')) {
+        return '5'
+    }
+    if (path.includes('/logs')) {
+        return '4'
+    }
+    if (path.includes('/helices')) {
+        return '3'
+    }
+    if (path.includes('/clients')) {
+        return '2'
+    }
+    if (path === '/') {
+        return '1'
+    }
+    return '1'
 }
 </script>
 
@@ -103,7 +110,7 @@ function getKeyFromRoute(path: string): string {
             <a-menu-item key="6" v-if="isAdmin">
                 <ProfileOutlined />
                 <span class="nav-text">
-                    <router-link to="/orders"> Pedidos </router-link>
+                    <router-link to="/orders/"> Pedidos </router-link>
                 </span>
             </a-menu-item>
             <a-menu-item key="2" v-if="isAdmin">
@@ -115,7 +122,9 @@ function getKeyFromRoute(path: string): string {
             <a-menu-item key="3" v-if="!isAdmin">
                 <ControlOutlined />
                 <span class="nav-text">
-                    <router-link to="/helices"> Hélices </router-link>
+                    <router-link :to="`/helices/${user.clientApp?.id}`">
+                        Hélices
+                    </router-link>
                 </span>
             </a-menu-item>
             <a-menu-item key="4">
@@ -127,7 +136,9 @@ function getKeyFromRoute(path: string): string {
             <a-menu-item key="5">
                 <TeamOutlined />
                 <span class="nav-text">
-                    <router-link to="/users"> Usuários </router-link>
+                    <router-link :to="`/users/${user.clientApp?.id}`">
+                        Usuários
+                    </router-link>
                 </span>
             </a-menu-item>
         </a-menu>

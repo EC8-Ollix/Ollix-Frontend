@@ -71,3 +71,34 @@ export interface ClientsData {
     active: boolean
     isLoading: boolean
 }
+
+// Order Types
+
+export interface OrderData {
+    id: string
+    requesterName: string
+    requesterEmail: string
+    observation: string
+    requestDate: string
+    orderStatus: number
+    installationDate: string
+    quantityRequested: number
+    addressId: string
+    clientId: string
+}
+
+// Address Types
+
+export interface AddressApp {
+    id: string
+    postalCode: string
+    street: string
+    neighborhood: string
+    city: string
+    state: string
+}
+
+export interface HelicesByAddress {
+    address: AddressApp
+    propellersCount: number
+}
