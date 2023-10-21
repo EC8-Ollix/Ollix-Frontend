@@ -16,23 +16,22 @@
             "
             :class="{ content: !viaClientScreen }"
         >
-            <a-table
-                :columns="columns"
-                :data-source="data"
-                :pagination="false"
-                :loading="loading"
-                size="small"
-            >
-                <template #bodyCell="{ column, text, record }">
-                    <template v-if="column.dataIndex === 'actions' && isAdmin">
-                        <a-popconfirm
-                            title="Tem certeza que deseja excluir esse usuário?"
-                        >
-                            <a-button>Excluir</a-button>
-                        </a-popconfirm>
-                    </template>
+            <a-config-provider>
+                <template #renderEmpty>
+                    <div style="text-align: center; padding: 25px">
+                        <smile-outlined style="font-size: 20px" />
+                        <p>Nada encontrado</p>
+                    </div>
                 </template>
-            </a-table>
+                <a-table
+                    :columns="columns"
+                    :data-source="data"
+                    :pagination="false"
+                    :loading="loading"
+                    size="small"
+                >
+                </a-table>
+            </a-config-provider>
             <a-pagination
                 v-model:current="pagination.page"
                 v-model:pageSize="pagination.pageSize"
@@ -62,6 +61,7 @@ import {
 } from 'vue'
 import { useNavigation } from '../../composables/useNavigation'
 import { useStore } from 'vuex'
+import { SmileOutlined } from '@ant-design/icons-vue'
 
 import { api } from '../../api/api'
 import { PaginationRequest, PaginationResponse, User } from '../../types/types'
@@ -69,6 +69,9 @@ import { ErrorModel, notifyError } from '../../config/notification'
 
 export default defineComponent({
     name: 'Users',
+    components: {
+        SmileOutlined,
+    },
     props: {
         clientId: {
             type: String as PropType<string>,
@@ -89,22 +92,17 @@ export default defineComponent({
             {
                 title: 'Nome',
                 dataIndex: 'firstName',
-                width: '25%',
+                width: '33%',
             },
             {
                 title: 'Sobrenome',
                 dataIndex: 'lastName',
-                width: '25%',
+                width: '33%',
             },
             {
                 title: 'Email',
                 dataIndex: 'userEmail',
-                width: '25%',
-            },
-            {
-                title: 'Ações',
-                dataIndex: 'actions',
-                width: '25%',
+                width: '33%',
             },
         ]
 

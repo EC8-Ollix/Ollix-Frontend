@@ -107,7 +107,7 @@ function getKeyFromRoute(path: string): string {
                     <router-link to="/admin"> Dashboard </router-link>
                 </span>
             </a-menu-item>
-            <a-menu-item key="6" v-if="isAdmin">
+            <a-menu-item key="6">
                 <ProfileOutlined />
                 <span class="nav-text">
                     <router-link to="/orders/"> Pedidos </router-link>
@@ -127,17 +127,19 @@ function getKeyFromRoute(path: string): string {
                     </router-link>
                 </span>
             </a-menu-item>
-            <a-menu-item key="4">
-                <AuditOutlined />
-                <span class="nav-text">
-                    <router-link to="/logs"> Logs </router-link>
-                </span>
-            </a-menu-item>
             <a-menu-item key="5">
                 <TeamOutlined />
                 <span class="nav-text">
                     <router-link :to="`/users/${user.clientApp?.id}`">
                         Usuários
+                    </router-link>
+                </span>
+            </a-menu-item>
+            <a-menu-item key="4">
+                <AuditOutlined />
+                <span class="nav-text">
+                    <router-link :to="`/logs/${user.clientApp?.id}`">
+                        Logs
                     </router-link>
                 </span>
             </a-menu-item>

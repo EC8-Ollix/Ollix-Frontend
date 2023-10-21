@@ -46,7 +46,7 @@
                             {{ record.address.city }}/{{ record.address.state }}
                         </template>
                         <template v-else-if="column.dataIndex === 'actions'">
-                            <a-button>Hélices</a-button>
+                            <a-button size="small">Hélices</a-button>
                         </template>
                     </template>
                 </a-table>

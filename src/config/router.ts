@@ -47,7 +47,7 @@ const routes = [
     },
     {
         name: 'logs',
-        path: '/logs',
+        path: '/logs/:clientId',
         component: () => import('../components/logs/Logs.vue'),
         meta: { requiresAuth: true },
     },
