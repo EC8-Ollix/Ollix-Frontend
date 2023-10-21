@@ -102,3 +102,14 @@ export interface HelicesByAddress {
     address: AddressApp
     propellersCount: number
 }
+
+// Logs Types
+
+export interface LogApp {
+    id: string
+    entity: string
+    entityId: string
+    operation: string
+    userName: string
+    date: string
+}

@@ -72,7 +72,15 @@
                             </a-tag>
                         </template>
                         <template v-else-if="column.dataIndex === 'actions'">
-                            <a-button>Ver Pedido</a-button>
+                            <div>
+                                <a-button
+                                    :icon="h(FileTextOutlined)"
+                                    href="https://www.google.com"
+                                    size="small"
+                                >
+                                    Visualizar
+                                </a-button>
+                            </div>
                         </template>
                     </template>
                 </a-table>
@@ -95,12 +103,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType, onMounted, watch, toRefs } from 'vue'
 import {
-    AppleOutlined,
-    AndroidOutlined,
-    SmileOutlined,
-} from '@ant-design/icons-vue'
+    defineComponent,
+    ref,
+    PropType,
+    onMounted,
+    watch,
+    toRefs,
+    h,
+} from 'vue'
+import { SmileOutlined, FileTextOutlined } from '@ant-design/icons-vue'
 import { useNavigation } from '../../composables/useNavigation'
 import { formatStringDateToBR } from '../../composables/dateHelper'
 
@@ -128,8 +140,7 @@ export default defineComponent({
         },
     },
     components: {
-        AppleOutlined,
-        AndroidOutlined,
+        FileTextOutlined,
         SmileOutlined,
         'a-table': Table,
     },
@@ -157,7 +168,7 @@ export default defineComponent({
             {
                 title: 'Cliente',
                 dataIndex: 'client',
-                width: '15%',
+                width: '20%',
             },
             {
                 title: 'Nome',
@@ -172,17 +183,17 @@ export default defineComponent({
             {
                 title: 'Data da Solicitação',
                 dataIndex: 'requestDate',
-                width: '10%',
+                width: '15%',
             },
             {
-                title: 'Quantidade',
+                title: 'Qtd.',
                 dataIndex: 'quantityRequested',
-                width: '10%',
+                width: '5%',
             },
             {
                 title: 'Ações',
                 dataIndex: 'actions',
-                width: '10%',
+                width: '5%',
             },
         ]
 
@@ -242,6 +253,8 @@ export default defineComponent({
             totalRecords,
             formatStringDateToBR,
             getTagForOrderStatus,
+            FileTextOutlined,
+            h,
         }
     },
 })
@@ -252,4 +265,3 @@ export default defineComponent({
     border-radius: 12px;
 }
 </style>
-../../types/orders/orderStatus

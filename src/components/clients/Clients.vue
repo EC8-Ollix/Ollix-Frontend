@@ -56,7 +56,9 @@
                                     },
                                 }"
                             >
-                                <a-button size="small">Detalhes</a-button>
+                                <a-button size="small"
+                                    ><FileSearchOutlined />Detalhes</a-button
+                                >
                             </router-link>
                         </template>
                     </template>
@@ -85,6 +87,7 @@ import {
     AppleOutlined,
     AndroidOutlined,
     SmileOutlined,
+    FileSearchOutlined,
 } from '@ant-design/icons-vue'
 import { useNavigation } from '../../composables/useNavigation'
 import { Table } from 'ant-design-vue'
@@ -104,6 +107,7 @@ export default defineComponent({
         AppleOutlined,
         AndroidOutlined,
         SmileOutlined,
+        FileSearchOutlined,
         'a-table': Table,
     },
     setup() {
@@ -215,6 +219,7 @@ export default defineComponent({
             pageSizeOptions,
             handleSwitchChange,
             totalRecords,
+            FileSearchOutlined,
         }
     },
 })
