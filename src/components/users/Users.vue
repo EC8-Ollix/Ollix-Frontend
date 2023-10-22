@@ -2,7 +2,6 @@
     <a-page-header
         class="pageHeader"
         title="Usuários"
-        sub-title="Gerencie os Usuários por aqui"
         @back="goBack"
         v-if="!viaClientScreen"
     />

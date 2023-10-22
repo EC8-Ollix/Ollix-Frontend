@@ -1,88 +1,168 @@
 <template>
-    <a-page-header
-        class="pageHeader"
-        title="Clientes"
-        sub-title="Gerencie os Clientes por aqui"
-        @back="goBack"
-    />
+    <a-page-header class="pageHeader" title="Clientes" @back="goBack">
+    </a-page-header>
 
     <a-layout-content :style="{ margin: '10px 16px 25px' }">
         <div :style="{ padding: '20px', background: '#fff' }" class="content">
-            <a-config-provider>
-                <template #renderEmpty>
-                    <div style="text-align: center; padding: 25px">
-                        <smile-outlined style="font-size: 20px" />
-                        <p>Nada encontrado</p>
-                    </div>
-                </template>
-                <a-table
-                    :columns="columns"
-                    :data-source="data"
-                    :pagination="false"
-                    :loading="loading"
-                    size="small"
-                >
-                    <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.dataIndex === 'cnpj'">
-                            {{ record.cnpj.value }}
-                        </template>
-                        <template v-else-if="column.dataIndex === 'active'">
-                            <a-popconfirm
-                                @confirm="toggleActive(record as ClientsData)"
-                                title="Tem certeza que deseja desativar esse cliente?"
-                            >
-                                <a-switch
-                                    :checked="record.active"
-                                    :loading="record.isLoading"
-                                    size="small"
-                                    @change="
-                                        handleSwitchChange(
-                                            record as ClientsData
-                                        )
-                                    "
-                                ></a-switch>
-                            </a-popconfirm>
-                        </template>
-                        <template v-else-if="column.dataIndex === 'actions'">
-                            <!-- <router-link :to="`/clients/${record.id}`">
-                                <a-button size="small">Detalhes</a-button>
-                            </router-link> -->
-                            <router-link
-                                :to="{
-                                    name: 'clientDetails',
-                                    params: { clientId: record.id },
-                                    query: {
-                                        pagination: JSON.stringify(pagination),
-                                    },
-                                }"
-                            >
-                                <a-button size="small"
-                                    ><FileSearchOutlined />Detalhes</a-button
-                                >
-                            </router-link>
-                        </template>
+            <div class="filtros">
+                <h3>Filtros</h3>
+                <a-row>
+                    <a-col class="filtros-input" :span="22">
+                        <a-row>
+                            <a-col :span="8">
+                                <div>
+                                    <div class="perso-label">Razão Social</div>
+                                    <a-input
+                                        v-model:value="formState.companyName"
+                                        placeholder="Razão Social"
+                                    >
+                                    </a-input>
+                                </div>
+                            </a-col>
+                            <a-col :span="8">
+                                <div>
+                                    <div class="perso-label">Nome Fantasia</div>
+                                    <a-input
+                                        v-model:value="formState.bussinessName"
+                                        placeholder="Nome Fantasia"
+                                    >
+                                    </a-input>
+                                </div>
+                            </a-col>
+                            <a-col :span="4">
+                                <div>
+                                    <div class="perso-label">CNPJ</div>
+                                    <a-input
+                                        v-model:value="formState.cnpj"
+                                        placeholder="CNPJ"
+                                    >
+                                    </a-input>
+                                </div>
+                            </a-col>
+                            <a-col :span="4">
+                                <div>
+                                    <div class="perso-label">Ativo/Inativo</div>
+
+                                    <a-select
+                                        v-model:value="formState.active"
+                                        placeholder="Ativo/Inativo"
+                                        style="width: 100%"
+                                    >
+                                        <a-select-option value="true"
+                                            >Ativo</a-select-option
+                                        >
+                                        <a-select-option value="false"
+                                            >Inativo</a-select-option
+                                        >
+                                    </a-select>
+                                </div>
+                            </a-col>
+                        </a-row>
+                    </a-col>
+                    <a-col class="filtros-button" :span="2">
+                        <a-row>
+                            <a-col :span="24">
+                                <div class="button-form-item">
+                                    <a-button
+                                        type="primary"
+                                        html-type="submit"
+                                        style="width: 100%"
+                                        @click="handlePesquisa"
+                                    >
+                                        Pesquisar
+                                    </a-button>
+                                </div>
+                            </a-col>
+                        </a-row>
+                    </a-col>
+                </a-row>
+            </div>
+
+            <div class="table-results">
+                <a-config-provider>
+                    <template #renderEmpty>
+                        <div style="text-align: center; padding: 25px">
+                            <smile-outlined style="font-size: 20px" />
+                            <p>Nada encontrado</p>
+                        </div>
                     </template>
-                </a-table>
-            </a-config-provider>
-            <a-pagination
-                v-model:current="pagination.page"
-                v-model:pageSize="pagination.pageSize"
-                :page-size-options="pageSizeOptions"
-                show-size-changer
-                :total="totalRecords"
-                @showSizeChange="onShowSizeChange"
-                style="text-align: right; margin: 25px 0 15px 0"
-            >
-                <template #buildOptionText="props">
-                    <span>{{ props.value }}/pág</span>
-                </template>
-            </a-pagination>
+                    <a-table
+                        :columns="columns"
+                        :data-source="data"
+                        :pagination="false"
+                        :loading="loading"
+                        size="small"
+                    >
+                        <template #bodyCell="{ column, text, record }">
+                            <template v-if="column.dataIndex === 'cnpj'">
+                                {{ record.cnpj.value }}
+                            </template>
+                            <template v-else-if="column.dataIndex === 'active'">
+                                <div class="align-column-center">
+                                    <a-popconfirm
+                                        @confirm="
+                                            toggleActive(record as ClientsData)
+                                        "
+                                        :title="
+                                            record.active
+                                                ? 'Tem certeza que deseja desativar essa Cliente?'
+                                                : 'Tem certeza que deseja ativar essa Cliente?'
+                                        "
+                                    >
+                                        <a-switch
+                                            :checked="record.active"
+                                            :loading="record.isLoading"
+                                            size="small"
+                                            @change="
+                                                handleSwitchChange(
+                                                    record as ClientsData
+                                                )
+                                            "
+                                        ></a-switch>
+                                    </a-popconfirm>
+                                </div>
+                            </template>
+                            <template
+                                v-else-if="column.dataIndex === 'actions'"
+                            >
+                                <router-link
+                                    :to="{
+                                        name: 'clientDetails',
+                                        params: { clientId: record.id },
+                                        query: {
+                                            pagination:
+                                                JSON.stringify(pagination),
+                                        },
+                                    }"
+                                >
+                                    <a-button size="small"
+                                        ><FileSearchOutlined />Detalhes</a-button
+                                    >
+                                </router-link>
+                            </template>
+                        </template>
+                    </a-table>
+                </a-config-provider>
+                <a-pagination
+                    v-model:current="pagination.page"
+                    v-model:pageSize="pagination.pageSize"
+                    :page-size-options="pageSizeOptions"
+                    show-size-changer
+                    :total="totalRecords"
+                    @showSizeChange="onShowSizeChange"
+                    style="text-align: right; margin: 25px 0 15px 0"
+                >
+                    <template #buildOptionText="props">
+                        <span>{{ props.value }}/pág</span>
+                    </template>
+                </a-pagination>
+            </div>
         </div>
     </a-layout-content>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, watch } from 'vue'
+import { defineComponent, ref, onMounted, watch, reactive } from 'vue'
 import {
     AppleOutlined,
     AndroidOutlined,
@@ -100,6 +180,13 @@ import {
 } from '../../types/types'
 import { ErrorModel, notifyError } from '../../config/notification'
 import { useRoute } from 'vue-router'
+
+interface FiltroClientState {
+    companyName: string | undefined
+    bussinessName: string | undefined
+    cnpj: string | undefined
+    active: string
+}
 
 export default defineComponent({
     name: 'Clients',
@@ -152,11 +239,17 @@ export default defineComponent({
 
         const fetchData = async () => {
             loading.value = true
+
+            const params = {
+                ...formState,
+                ...pagination.value,
+            }
+
             try {
                 const response = await api.get<PaginationResponse<ClientsData>>(
                     '/clients',
                     {
-                        params: pagination.value,
+                        params: params,
                     }
                 )
 
@@ -178,8 +271,9 @@ export default defineComponent({
                 pagination.value = JSON.parse(
                     route.query.pagination as string
                 ) as PaginationRequest
+            } else {
+                fetchData()
             }
-            fetchData()
         })
 
         watch(pagination, fetchData, { deep: true })
@@ -207,6 +301,17 @@ export default defineComponent({
         }
 
         const handleSwitchChange = (record: ClientsData) => {}
+
+        const formState: FiltroClientState = reactive({
+            companyName: undefined,
+            bussinessName: undefined,
+            cnpj: undefined,
+            active: 'true',
+        })
+
+        const handlePesquisa = async () => {
+            await fetchData()
+        }
         return {
             goBack,
             activeKey,
@@ -220,6 +325,8 @@ export default defineComponent({
             handleSwitchChange,
             totalRecords,
             FileSearchOutlined,
+            formState,
+            handlePesquisa,
         }
     },
 })

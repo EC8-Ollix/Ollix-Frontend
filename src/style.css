@@ -117,6 +117,40 @@ li.ant-menu-item-selected span.nav-text {
     color: #4d6f89;
 }
 
+.ant-table-cell .align-column-center {
+    text-align: center;
+}
+
+.filtros {
+    margin-bottom: 2rem;
+}
+
+div.perso-label {
+    font-size: 13px;
+    color: #686868;
+    margin-bottom: 0.2rem;
+}
+.filtros h3 {
+    color: #747272;
+}
+
+.button-form-item {
+    align-self: end;
+}
+
+.filtros-input .ant-col {
+    padding-right: 15px;
+}
+
+.filtros-input .ant-row {
+    justify-content: space-between;
+}
+
+.filtros-button {
+    align-self: end;
+    text-align: end;
+}
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -144,6 +178,26 @@ text {
 
 td.ant-table-cell {
     font-size: 13px;
+}
+
+a {
+    color: #153146;
+}
+
+a:hover {
+    color: #4d6f89;
+}
+
+.ant-page-header .ant-page-header-heading-title {
+    margin-right: 12px;
+    margin-bottom: 0;
+    color: rgba(0, 0, 0, 0.88);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 @media (prefers-color-scheme: light) {

@@ -16,6 +16,7 @@
                     <Helice
                         :clientId="clientData?.id"
                         :viaClientScreen="true"
+                        :lastQuery="route.query"
                     />
                 </a-tab-pane>
                 <a-tab-pane key="2">
@@ -92,7 +93,8 @@ export default defineComponent({
                     query: { pagination: route.query.pagination },
                 })
             } else {
-                router.push({ path: '/clients' })
+                // router.push({ path: '/clients' })
+                router.go(-1)
             }
         }
 
@@ -112,6 +114,7 @@ export default defineComponent({
             goBack,
             activeKey,
             clientData,
+            route,
         }
     },
 })
