@@ -29,10 +29,14 @@ export default defineComponent({
         const onBreakpoint = (broken: boolean) => {}
 
         watch(
-            () => route.path,
-            (newPath) => {
-                selectedKeys.value = [getKeyFromRoute(newPath)]
-            }
+            () => route,
+            (newRoute) => {
+                const context = newRoute.query.fromClientDetails
+                    ? 'fromClientDetails'
+                    : undefined
+                selectedKeys.value = [getKeyFromRoute(newRoute.path, context)]
+            },
+            { deep: true }
         )
 
         return {
@@ -55,7 +59,7 @@ export default defineComponent({
     },
 })
 
-function getKeyFromRoute(path: string): string {
+function getKeyFromRoute(path: string, context?: string): string {
     if (path.includes('/admin')) {
         return '7'
     }
@@ -69,6 +73,9 @@ function getKeyFromRoute(path: string): string {
         return '4'
     }
     if (path.includes('/helices')) {
+        if (context === 'fromClientDetails') {
+            return '2'
+        }
         return '3'
     }
     if (path.includes('/clients')) {

@@ -2,7 +2,6 @@
     <a-page-header
         class="pageHeader"
         title="Logs"
-        sub-title="Gerencie os Logs por aqui"
         @back="goBack"
         v-if="!viaClientScreen"
     />

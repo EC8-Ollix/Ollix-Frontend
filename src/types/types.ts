@@ -98,7 +98,7 @@ export interface AddressApp {
     state: string
 }
 
-export interface HelicesByAddress {
+export interface HeliceByAddress {
     address: AddressApp
     propellersCount: number
 }
@@ -112,4 +112,19 @@ export interface LogApp {
     operation: string
     userName: string
     date: string
+}
+
+// Helices Types
+
+export interface Helice {
+    id: string
+    helixId: string
+    active: boolean
+    installed: boolean
+    addressId: string
+    address: AddressApp
+    clientId: string
+    orderId: string
+    order: OrderData
+    isLoading: boolean
 }

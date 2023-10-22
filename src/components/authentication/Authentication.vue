@@ -685,4 +685,3 @@ export default defineComponent({
     margin-top: 10px;
 }
 </style>
-../../api/api ../../config/notification

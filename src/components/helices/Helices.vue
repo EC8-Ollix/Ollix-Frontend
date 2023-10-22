@@ -2,7 +2,6 @@
     <a-page-header
         class="pageHeader"
         title="Hélices"
-        sub-title="Gerencie suas hélices aqui"
         @back="goBack"
         v-if="!viaClientScreen"
     />
@@ -16,74 +15,133 @@
             "
             :class="{ content: !viaClientScreen }"
         >
-            <a-config-provider>
-                <template #renderEmpty>
-                    <div style="text-align: center; padding: 25px">
-                        <smile-outlined style="font-size: 20px" />
-                        <p>Nada encontrado</p>
-                    </div>
-                </template>
-                <a-table
-                    :columns="columns"
-                    :data-source="data"
-                    :pagination="false"
-                    :loading="loading"
-                    size="small"
-                >
-                    <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.dataIndex === 'postalCode'">
-                            {{ record.address.postalCode }}
-                        </template>
-                        <template v-else-if="column.dataIndex === 'street'">
-                            {{ record.address.street }}
-                        </template>
-                        <template
-                            v-else-if="column.dataIndex === 'neighborhood'"
+            <transition name="slide">
+                <div>
+                    <div v-if="showOriginalTable">
+                        <a-config-provider>
+                            <template #renderEmpty>
+                                <div style="text-align: center; padding: 25px">
+                                    <smile-outlined style="font-size: 20px" />
+                                    <p>Nada encontrado</p>
+                                </div>
+                            </template>
+                            <a-table
+                                :columns="columns"
+                                :data-source="data"
+                                :pagination="false"
+                                :loading="loading"
+                                size="small"
+                            >
+                                <template #bodyCell="{ column, text, record }">
+                                    <template
+                                        v-if="column.dataIndex === 'postalCode'"
+                                    >
+                                        {{ record.address.postalCode }}
+                                    </template>
+                                    <template
+                                        v-else-if="
+                                            column.dataIndex === 'street'
+                                        "
+                                    >
+                                        {{ record.address.street }}
+                                    </template>
+                                    <template
+                                        v-else-if="
+                                            column.dataIndex === 'neighborhood'
+                                        "
+                                    >
+                                        {{ record.address.neighborhood }}
+                                    </template>
+                                    <template
+                                        v-else-if="
+                                            column.dataIndex === 'cityState'
+                                        "
+                                    >
+                                        {{ record.address.city }}/{{
+                                            record.address.state
+                                        }}
+                                    </template>
+                                    <template
+                                        v-else-if="
+                                            column.dataIndex === 'actions'
+                                        "
+                                    >
+                                        <a-button
+                                            size="small"
+                                            @click="
+                                                toggleTable(record.address.id)
+                                            "
+                                            ><ControlOutlined />Hélices</a-button
+                                        >
+                                    </template>
+                                </template>
+                            </a-table>
+                        </a-config-provider>
+                        <a-pagination
+                            v-model:current="pagination.page"
+                            v-model:pageSize="pagination.pageSize"
+                            :page-size-options="pageSizeOptions"
+                            show-size-changer
+                            :total="totalRecords"
+                            @showSizeChange="onShowSizeChange"
+                            style="text-align: right; margin: 25px 0 15px 0"
                         >
-                            {{ record.address.neighborhood }}
-                        </template>
-                        <template v-else-if="column.dataIndex === 'cityState'">
-                            {{ record.address.city }}/{{ record.address.state }}
-                        </template>
-                        <template v-else-if="column.dataIndex === 'actions'">
-                            <a-button size="small">Hélices</a-button>
-                        </template>
-                    </template>
-                </a-table>
-            </a-config-provider>
-            <a-pagination
-                v-model:current="pagination.page"
-                v-model:pageSize="pagination.pageSize"
-                :page-size-options="pageSizeOptions"
-                show-size-changer
-                :total="totalRecords"
-                @showSizeChange="onShowSizeChange"
-                style="text-align: right; margin: 25px 0 15px 0"
-            >
-                <template #buildOptionText="props">
-                    <span>{{ props.value }}/pág</span>
-                </template>
-            </a-pagination>
+                            <template #buildOptionText="props">
+                                <span>{{ props.value }}/pág</span>
+                            </template>
+                        </a-pagination>
+                    </div>
+                    <div v-if="!showOriginalTable">
+                        <a-button
+                            title="voltar"
+                            shape="circle"
+                            type="text"
+                            style="margin-bottom: 15px"
+                            @click="toggleTable('')"
+                            ><ArrowLeftOutlined
+                        /></a-button>
+
+                        <HelicesByAddress
+                            :clientId="(route.params.clientId as string)"
+                            :addressId="selectedAddress"
+                            :viaClientScreen="true"
+                        />
+                    </div>
+                </div>
+            </transition>
         </div>
     </a-layout-content>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, watch, PropType, toRefs } from 'vue'
+import { defineComponent, ref, onMounted, watch, PropType } from 'vue'
 import { useNavigation } from '../../composables/useNavigation'
-import { SmileOutlined } from '@ant-design/icons-vue'
+import {
+    SmileOutlined,
+    FileSearchOutlined,
+    ArrowLeftOutlined,
+    ControlOutlined,
+} from '@ant-design/icons-vue'
 import { api } from '../../api/api'
 import {
     PaginationRequest,
     PaginationResponse,
-    HelicesByAddress,
+    HeliceByAddress,
 } from '../../types/types'
 import { ErrorModel, notifyError } from '../../config/notification'
 
+import HelicesByAddress from './HelicesByAddress.vue'
+
+import { useRoute } from 'vue-router'
+
 export default defineComponent({
-    name: 'Helices',
+    name: 'AdressesHelices',
     components: {
         SmileOutlined,
+        FileSearchOutlined,
+        ArrowLeftOutlined,
+        ControlOutlined,
+        HelicesByAddress,
     },
     props: {
         clientId: {
@@ -95,8 +153,14 @@ export default defineComponent({
         },
     },
     setup(props) {
+        const showOriginalTable = ref(true)
+        const selectedAddress = ref<string>('')
+        function toggleTable(addressId: string) {
+            selectedAddress.value = addressId
+            showOriginalTable.value = !showOriginalTable.value
+        }
+
         const { goBack } = useNavigation()
-        const { clientId } = toRefs(props)
         const totalRecords = ref(0)
         const columns = [
             {
@@ -132,27 +196,29 @@ export default defineComponent({
         ]
 
         const pageSizeOptions = ref<string[]>(['5', '10', '20', '40', '50'])
-        const data = ref<HelicesByAddress[]>([])
+        const data = ref<HeliceByAddress[]>([])
         const loading = ref(false)
         const pagination = ref<PaginationRequest>({
             page: 1,
             pageSize: 10,
         })
 
+        const route = useRoute()
         const fetchData = async () => {
             loading.value = true
 
             const params: any = {
+                installed: true,
                 ...pagination.value,
             }
 
-            if (clientId.value) {
-                params.clientId = clientId.value
+            if (route.params.clientId) {
+                params.clientId = route.params.clientId
             }
 
             try {
                 const response = await api.get<
-                    PaginationResponse<HelicesByAddress>
+                    PaginationResponse<HeliceByAddress>
                 >('/propellers/propeller-adresses', {
                     params: params,
                 })
@@ -173,16 +239,6 @@ export default defineComponent({
 
         watch(pagination, fetchData, { deep: true })
 
-        watch(
-            () => props.clientId,
-            (newValue) => {
-                if (newValue) {
-                    fetchData()
-                }
-            },
-            { immediate: true }
-        )
-
         const onShowSizeChange = (current: number, pageSize: number) => {
             pagination.value.page = current
             pagination.value.pageSize = pageSize
@@ -201,6 +257,10 @@ export default defineComponent({
             onShowSizeChange,
             pageSizeOptions,
             totalRecords,
+            showOriginalTable,
+            toggleTable,
+            selectedAddress,
+            route,
         }
     },
 })
@@ -209,5 +269,14 @@ export default defineComponent({
 <style scoped>
 .content {
     border-radius: 12px;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+    transition: transform 0.5s;
+}
+.slide-enter,
+.slide-leave-to {
+    transform: translateX(100%);
 }
 </style>
