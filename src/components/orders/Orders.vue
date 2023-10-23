@@ -101,7 +101,6 @@
                                     </a-button>
                                 </div>
                             </a-col>
-                            <!-- <a-col :span="1"> </a-col> -->
                             <a-col :span="8">
                                 <div class="button-form-item">
                                     <a-button
@@ -232,7 +231,10 @@
                     <a-button style="margin-left: 10px" @click="resetForm"
                         >Limpar</a-button
                     >
-                    <a-button type="primary" @click="onNewOrderConfirm"
+                    <a-button
+                        type="primary"
+                        @click="onNewOrderConfirm"
+                        :loading="confirmLoading"
                         >Confirmar Pedido</a-button
                     >
                 </template>
