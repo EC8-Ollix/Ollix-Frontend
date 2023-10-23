@@ -108,6 +108,7 @@
                                                 ? 'Tem certeza que deseja desativar essa Cliente?'
                                                 : 'Tem certeza que deseja ativar essa Cliente?'
                                         "
+                                        placement="topRight"
                                     >
                                         <a-switch
                                             :checked="record.active"

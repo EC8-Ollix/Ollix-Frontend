@@ -17,6 +17,8 @@ export default defineComponent({
     name: 'Sidebar',
     setup(props) {
         const store = useStore()
+        const isCollapsed = computed(() => store.getters.isSidebarCollapsed)
+
         const isLoggedIn = computed(() => store.state.isLoggedIn)
 
         const user = computed((): User => store.getters.user)
@@ -39,6 +41,17 @@ export default defineComponent({
             { deep: true }
         )
 
+        const siderStyle = computed(() => {
+            return isCollapsed.value
+                ? {}
+                : {
+                      flex: '0 0 200px',
+                      maxWidth: '200px',
+                      minWidth: '200px',
+                      width: '200px',
+                  }
+        })
+
         return {
             selectedKeys,
             onCollapse,
@@ -46,6 +59,8 @@ export default defineComponent({
             isLoggedIn,
             isAdmin,
             user,
+            isCollapsed,
+            siderStyle,
         }
     },
     components: {
@@ -89,12 +104,13 @@ function getKeyFromRoute(path: string, context?: string): string {
 </script>
 
 <template>
-    <a-layout-sider
+    <aside
+        :style="siderStyle"
         breakpoint="lg"
         collapsed-width="0px"
         @collapse="onCollapse"
         @breakpoint="onBreakpoint"
-        class="sidebar"
+        class="sidebar ant-layout-sider ant-layout-sider-dark"
         v-if="isLoggedIn"
     >
         <a-menu
@@ -103,59 +119,79 @@ function getKeyFromRoute(path: string, context?: string): string {
             :style="{ borderRight: 0 }"
         >
             <a-menu-item key="1" v-if="!isAdmin">
-                <AreaChartOutlined />
                 <span class="nav-text">
-                    <router-link to="/"> Dashboard </router-link>
-                </span>
-            </a-menu-item>
-            <a-menu-item key="7" v-if="isAdmin">
-                <AreaChartOutlined />
-                <span class="nav-text">
-                    <router-link to="/admin"> Dashboard </router-link>
-                </span>
-            </a-menu-item>
-            <a-menu-item key="6">
-                <ProfileOutlined />
-                <span class="nav-text">
-                    <router-link to="/orders/"> Pedidos </router-link>
-                </span>
-            </a-menu-item>
-            <a-menu-item key="2" v-if="isAdmin">
-                <ContactsOutlined />
-                <span class="nav-text">
-                    <router-link to="/clients"> Clientes </router-link>
-                </span>
-            </a-menu-item>
-            <a-menu-item key="3" v-if="!isAdmin">
-                <ControlOutlined />
-                <span class="nav-text">
-                    <router-link :to="`/helices/${user.clientApp?.id}`">
-                        Hélices
+                    <router-link to="/" title="Dashboard">
+                        <AreaChartOutlined />
+                        <span v-if="!isCollapsed">Dashboard</span>
                     </router-link>
                 </span>
             </a-menu-item>
-            <a-menu-item key="5">
-                <TeamOutlined />
+            <a-menu-item key="7" v-if="isAdmin">
                 <span class="nav-text">
-                    <router-link :to="`/users/${user.clientApp?.id}`">
-                        Usuários
+                    <router-link to="/admin" title="Dashboard">
+                        <AreaChartOutlined />
+                        <span v-if="!isCollapsed">Dashboard</span>
+                    </router-link>
+                </span>
+            </a-menu-item>
+            <a-menu-item key="3" v-if="!isAdmin" title="Hélices">
+                <span class="nav-text">
+                    <router-link :to="`/helices/${user.clientApp?.id}`">
+                        <ControlOutlined />
+                        <span v-if="!isCollapsed">Hélices</span>
+                    </router-link>
+                </span>
+            </a-menu-item>
+            <a-menu-item key="6">
+                <span class="nav-text">
+                    <router-link to="/orders/" title="Pedidos">
+                        <ProfileOutlined />
+                        <span v-if="!isCollapsed">Pedidos</span>
+                    </router-link>
+                </span>
+            </a-menu-item>
+            <a-menu-item key="2" v-if="isAdmin">
+                <span class="nav-text">
+                    <router-link to="/clients" title="Clientes">
+                        <ContactsOutlined />
+                        <span v-if="!isCollapsed">Clientes</span>
+                    </router-link>
+                </span>
+            </a-menu-item>
+
+            <a-menu-item key="5">
+                <span class="nav-text">
+                    <router-link
+                        :to="`/users/${user.clientApp?.id}`"
+                        title="Usuários"
+                    >
+                        <TeamOutlined />
+                        <span v-if="!isCollapsed">Usuários </span>
                     </router-link>
                 </span>
             </a-menu-item>
             <a-menu-item key="4">
-                <AuditOutlined />
                 <span class="nav-text">
-                    <router-link :to="`/logs/${user.clientApp?.id}`">
-                        Logs
+                    <router-link
+                        :to="`/logs/${user.clientApp?.id}`"
+                        title="Logs"
+                    >
+                        <AuditOutlined />
+                        <span v-if="!isCollapsed">Logs</span>
                     </router-link>
                 </span>
             </a-menu-item>
         </a-menu>
-    </a-layout-sider>
+    </aside>
 </template>
 
 <style scoped>
 .sidebar {
     background-color: #fff;
+    transition: all 0.3s ease 0s;
+}
+
+.ant-layout.ant-layout-has-sider {
+    flex-direction: row;
 }
 </style>

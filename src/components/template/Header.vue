@@ -12,6 +12,8 @@ import { useRouter } from 'vue-router'
 import { SetUserLogout } from '../../config/store'
 import { User } from '../../types/types'
 
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
+
 export default defineComponent({
     name: 'Header',
     components: {
@@ -22,10 +24,18 @@ export default defineComponent({
         QuestionCircleOutlined,
         ExportOutlined,
         UserOutlined,
+        MenuFoldOutlined,
+        MenuUnfoldOutlined,
     },
     setup(props) {
         const store = useStore()
         const router = useRouter()
+
+        const toggleSidebar = () => {
+            store.dispatch('toggleSidebar')
+        }
+        const isCollapsed = computed(() => store.getters.isSidebarCollapsed)
+
         const user = computed((): User => store.state.user)
         const isLoggedIn = computed(() => store.state.isLoggedIn)
 
@@ -38,60 +48,84 @@ export default defineComponent({
             user,
             isLoggedIn,
             logout,
+            toggleSidebar,
+            isCollapsed,
         }
     },
 })
 </script>
 
 <template>
-    <a-layout-header class="header" style="height: 50px" v-if="isLoggedIn">
-        <div class="main-header">
-            <a href="/">
-                <div class="logo" />
-            </a>
-        </div>
-
-        <h3 class="title">
-            {{ user?.clientApp?.bussinessName }}
-        </h3>
-
-        <div class="toolbar">
-            <a-tooltip title="">
-                <question-circle-outlined
-                    style="color: #fff; margin-right: 12px"
-                />
-            </a-tooltip>
-
-            <a-dropdown trigger="hover" placement="bottomRight">
-                <a class="ant-dropdown-link" @click.prevent>
-                    <a-avatar
-                        style="
-                            background-color: #f56a00;
-                            vertical-align: middle;
-                            margin-inline: 8px;
-                        "
-                        :title="user?.firstName"
-                    >
-                        U
-                    </a-avatar>
+    <a-layout-header
+        style="
+            height: 50px;
+            padding-left: 5px;
+            display: inline-flex;
+            background-color: #142d3f;
+        "
+        v-if="isLoggedIn"
+    >
+        <a
+            @click="toggleSidebar"
+            style="
+                font-size: 1rem;
+                color: #fff;
+                margin-inline: 1.1rem;
+                align-self: center;
+            "
+        >
+            <MenuFoldOutlined v-if="!isCollapsed" />
+            <MenuUnfoldOutlined v-if="isCollapsed" />
+        </a>
+        <div class="header">
+            <div class="main-header">
+                <a href="/">
+                    <div class="logo" v-if="!isCollapsed" />
                 </a>
-                <template #overlay>
-                    <a-menu>
-                        <a-menu-item key="1">
-                            <span style="margin-right: 5px">
-                                <UserOutlined />
-                            </span>
-                            Meu Perfil
-                        </a-menu-item>
-                        <a-menu-item key="2" @click="logout">
-                            <span style="margin-right: 5px">
-                                <ExportOutlined />
-                            </span>
-                            Sair
-                        </a-menu-item>
-                    </a-menu>
-                </template>
-            </a-dropdown>
+            </div>
+
+            <h3 class="title">
+                {{ user?.clientApp?.bussinessName }}
+            </h3>
+
+            <div class="toolbar">
+                <a-tooltip title="">
+                    <question-circle-outlined
+                        style="color: #fff; margin-right: 12px"
+                    />
+                </a-tooltip>
+
+                <a-dropdown trigger="hover" placement="bottomRight">
+                    <a class="ant-dropdown-link" @click.prevent>
+                        <a-avatar
+                            style="
+                                background-color: #f56a00;
+                                vertical-align: middle;
+                                margin-inline: 8px;
+                            "
+                            :title="user?.firstName"
+                        >
+                            U
+                        </a-avatar>
+                    </a>
+                    <template #overlay>
+                        <a-menu>
+                            <a-menu-item key="1">
+                                <span style="margin-right: 5px">
+                                    <UserOutlined />
+                                </span>
+                                Meu Perfil
+                            </a-menu-item>
+                            <a-menu-item key="2" @click="logout">
+                                <span style="margin-right: 5px">
+                                    <ExportOutlined />
+                                </span>
+                                Sair
+                            </a-menu-item>
+                        </a-menu>
+                    </template>
+                </a-dropdown>
+            </div>
         </div>
     </a-layout-header>
 </template>
@@ -102,6 +136,8 @@ export default defineComponent({
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: 50px;
+    width: 100%;
 }
 
 .main-header {

@@ -23,6 +23,7 @@
                                     ? 'Tem certeza que deseja desativar essa Hélice?'
                                     : 'Tem certeza que deseja ativar essa Hélice?'
                             "
+                            placement="topRight"
                         >
                             <a-switch
                                 :checked="record.active"
