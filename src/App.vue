@@ -4,7 +4,7 @@ import Sidebar from './components/template/Sidebar.vue'
 import Content from './components/template/Content.vue'
 import { useStore } from 'vuex'
 
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, ref } from 'vue'
 
 export default defineComponent({
     name: 'App',
@@ -13,9 +13,14 @@ export default defineComponent({
         const store = useStore()
 
         const user = computed(() => store.state.user)
-
+        const isCollapsed = ref(false)
+        const toggleSidebar = () => {
+            isCollapsed.value = !isCollapsed.value
+        }
         return {
             user,
+            isCollapsed,
+            toggleSidebar,
         }
     },
 })
@@ -32,7 +37,7 @@ export default defineComponent({
         <a-layout style="height: 100vh">
             <Header />
 
-            <a-layout>
+            <a-layout class="ant-layout ant-layout-has-sider">
                 <Sidebar />
                 <a-layout>
                     <Content />

@@ -37,7 +37,7 @@
                                         v-model:value="
                                             formState.requesterSearch
                                         "
-                                        placeholder="Cliente"
+                                        placeholder="Solicitante"
                                     >
                                     </a-input>
                                 </div>
@@ -89,19 +89,19 @@
                         </a-row>
                     </a-col>
                     <a-col class="filtros-button" :span="5">
-                        <a-row>
+                        <a-row style="justify-content: space-between">
                             <a-col :span="15">
                                 <div class="button-form-item">
                                     <a-button
                                         type="primary"
                                         style="width: 100%"
                                         @click="handlePesquisa"
-                                    >
+                                        ><SearchOutlined />
                                         Pesquisar
                                     </a-button>
                                 </div>
                             </a-col>
-                            <a-col :span="1"> </a-col>
+                            <!-- <a-col :span="1"> </a-col> -->
                             <a-col :span="8">
                                 <div class="button-form-item">
                                     <a-button
@@ -116,6 +116,127 @@
                     </a-col>
                 </a-row>
             </div>
+            <div class="actions" v-if="!isAdmin">
+                <a-row style="place-content: start">
+                    <a-col>
+                        <a-button
+                            type="default"
+                            :icon="h(PlusOutlined)"
+                            @click="visible = true"
+                            >Novo Pedido</a-button
+                        >
+                    </a-col>
+                </a-row>
+            </div>
+
+            <a-modal
+                v-model:open="visible"
+                title="Realize seu Pedido de Hélices!"
+                :confirm-loading="confirmLoading"
+                width="750px"
+            >
+                <a-form
+                    ref="formRef"
+                    :rules="rules"
+                    :model="newOrderState"
+                    layout="vertical"
+                    name="form_in_modal"
+                >
+                    <a-row style="margin-top: 15px">
+                        <a-col :span="12">
+                            <a-form-item name="requesterName" label="Nome">
+                                <a-input
+                                    v-model:value="newOrderState.requesterName"
+                                    placeholder="Nome"
+                                />
+                            </a-form-item>
+                        </a-col>
+                        <a-col :span="1"> </a-col>
+                        <a-col :span="11">
+                            <a-form-item name="requesterEmail" label="Email">
+                                <a-input
+                                    v-model:value="newOrderState.requesterEmail"
+                                    placeholder="Email"
+                                />
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+                    <a-form-item name="observation" label="Observação">
+                        <a-textarea
+                            v-model:value="newOrderState.observation"
+                            placeholder="Observação"
+                        />
+                    </a-form-item>
+                    <a-row style="margin-top: 15px">
+                        <a-col :span="3">
+                            <a-form-item
+                                name="quantityRequested"
+                                label="Quantidade"
+                            >
+                                <a-input-number
+                                    v-model:value="
+                                        newOrderState.quantityRequested
+                                    "
+                                    placeholder="Qtde"
+                                    :min="1"
+                                />
+                            </a-form-item>
+                        </a-col>
+                        <a-col :span="1"> </a-col>
+                        <a-col :span="5">
+                            <a-form-item name="postalCode" label="CEP">
+                                <a-input
+                                    v-model:value="newOrderState.postalCode"
+                                    placeholder="CEP"
+                                    :max-length="9"
+                                    :min-length="9"
+                                    @input="onInputCep"
+                                    style="width: 100%"
+                                />
+                            </a-form-item>
+                        </a-col>
+                        <a-col :span="1"> </a-col>
+                        <a-col :span="14">
+                            <a-form-item name="address" label="Endereço">
+                                <a-input
+                                    v-model:value="newOrderState.street"
+                                    placeholder="Endereço"
+                                    :readonly="true"
+                                />
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+                    <a-row>
+                        <a-col :span="9">
+                            <a-form-item name="neighborhood" label="Bairro">
+                                <a-input
+                                    v-model:value="newOrderState.neighborhood"
+                                    placeholder="Bairro"
+                                    :readonly="true"
+                                />
+                            </a-form-item>
+                        </a-col>
+                        <a-col :span="1"> </a-col>
+                        <a-col :span="14">
+                            <a-form-item name="cityState" label="Cidade/Estado">
+                                <a-input
+                                    v-model:value="newOrderState.cityState"
+                                    placeholder="Cidade/Estado"
+                                    :readonly="true"
+                                />
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+                </a-form>
+                <template #footer>
+                    <a-button style="margin-left: 10px" @click="resetForm"
+                        >Limpar</a-button
+                    >
+                    <a-button type="primary" @click="onNewOrderConfirm"
+                        >Confirmar Pedido</a-button
+                    >
+                </template>
+            </a-modal>
 
             <div class="table-results">
                 <a-config-provider>
@@ -219,8 +340,15 @@ import {
     h,
     reactive,
     computed,
+    toRaw,
 } from 'vue'
-import { SmileOutlined, FileTextOutlined } from '@ant-design/icons-vue'
+import {
+    SmileOutlined,
+    FileTextOutlined,
+    SearchOutlined,
+    PlusOutlined,
+    CheckOutlined,
+} from '@ant-design/icons-vue'
 import { useNavigation } from '../../composables/useNavigation'
 import { formatStringDateToBR } from '../../composables/dateHelper'
 import { useStore } from 'vuex'
@@ -233,7 +361,11 @@ import {
     PaginationResponse,
     OrderData,
 } from '../../types/types'
-import { ErrorModel, notifyError } from '../../config/notification'
+import {
+    ErrorModel,
+    notifyError,
+    notifySuccess,
+} from '../../config/notification'
 
 import { getTagForOrderStatus } from '../../types/order/orderStatus'
 
@@ -243,6 +375,24 @@ import 'dayjs/locale/pt-br'
 import locale from 'ant-design-vue/es/date-picker/locale/pt_BR'
 
 dayjs.locale('pt-br')
+
+import type { FormInstance } from 'ant-design-vue'
+import type { Rule } from 'ant-design-vue/es/form'
+import axios from 'axios'
+import { Modal } from 'ant-design-vue'
+
+import { createVNode } from 'vue'
+
+interface NewOrderState {
+    requesterName: string
+    requesterEmail: string
+    observation: string
+    postalCode: string
+    quantityRequested: number
+    street: string
+    neighborhood: string
+    cityState: string
+}
 
 interface FiltroOrderState {
     clientSearch: string | undefined
@@ -265,6 +415,8 @@ export default defineComponent({
     components: {
         FileTextOutlined,
         SmileOutlined,
+        SearchOutlined,
+        PlusOutlined,
         'a-table': Table,
     },
     setup(props) {
@@ -285,7 +437,7 @@ export default defineComponent({
             pageSize: 10,
         })
 
-        const columns = [
+        let columns = [
             {
                 title: 'Status',
                 dataIndex: 'orderStatus',
@@ -322,6 +474,10 @@ export default defineComponent({
                 width: '5%',
             },
         ]
+
+        if (!isAdmin.value) {
+            columns = columns.filter((column) => column.dataIndex !== 'client')
+        }
 
         const fetchData = async () => {
             loading.value = true
@@ -418,6 +574,205 @@ export default defineComponent({
             formState.orderStatus = undefined
             formState.requestedDate = initialDates.value
         }
+        const cepValid = ref(true)
+
+        const rules: Record<string, Rule[]> = {
+            requesterName: [
+                {
+                    required: true,
+                    message: 'Digite o nome do solicitante',
+                    trigger: 'change',
+                },
+                {
+                    max: 200,
+                    message:
+                        'O Nome do Solicitante deve ter no máximo 200 caracteres',
+                    trigger: 'blur',
+                },
+            ],
+            requesterEmail: [
+                {
+                    required: true,
+                    message: 'Digite o nome do solicitante',
+                    trigger: 'change',
+                },
+                {
+                    max: 200,
+                    message:
+                        'O Nome do Solicitante deve ter no máximo 200 caracteres',
+                    trigger: 'blur',
+                },
+            ],
+            observation: [
+                {
+                    max: 600,
+                    message: 'A Observação deve ter no máximo 200 caracteres',
+                    trigger: 'blur',
+                },
+            ],
+            quantityRequested: [
+                {
+                    required: true,
+                    message: 'Obrigatório',
+                    trigger: 'change',
+                },
+                {
+                    validator: (_, value) => {
+                        if (value > 0) {
+                            return Promise.resolve()
+                        }
+                        return Promise.reject('Obrigatório')
+                    },
+                    trigger: 'change',
+                },
+            ],
+            postalCode: [
+                {
+                    required: true,
+                    message: 'O CEP é obrigatório',
+                    trigger: 'change',
+                },
+                {
+                    min: 9,
+                    max: 9,
+                    message: 'CEP Inválido',
+                    trigger: 'blur',
+                },
+                {
+                    validator: (_, value) => {
+                        if (cepValid.value) {
+                            return Promise.resolve()
+                        }
+                        return Promise.reject('CEP Inválido')
+                    },
+                    trigger: 'blur',
+                },
+            ],
+        }
+
+        const newOrderStepOne = ref<boolean>(false)
+        const confirmLoading = ref<boolean>(false)
+        const formRef = ref<FormInstance>()
+        const visible = ref(false)
+        const newOrderState = reactive<NewOrderState>({
+            requesterName: '',
+            requesterEmail: '',
+            observation: '',
+            postalCode: '',
+            street: '',
+            neighborhood: '',
+            cityState: '',
+            quantityRequested: 0,
+        })
+
+        const formatCEP = (value: string) => {
+            const valueOnlyNumbers = value.replace(/[^\d]/g, '')
+            let formattedCEP = valueOnlyNumbers
+
+            if (valueOnlyNumbers.length > 5) {
+                formattedCEP = `${valueOnlyNumbers.slice(
+                    0,
+                    5
+                )}-${valueOnlyNumbers.slice(5, 8)}`
+            } else {
+                formattedCEP = valueOnlyNumbers
+            }
+
+            return formattedCEP.slice(0, 9)
+        }
+
+        const onInputCep = (event: Event) => {
+            const target = event.target as HTMLInputElement
+            const value = target.value
+            newOrderState.postalCode = formatCEP(value)
+
+            if (newOrderState.postalCode.length === 9) {
+                fetchAddressFromCEP(value)
+            }
+        }
+
+        const fetchAddressFromCEP = async (cep: string) => {
+            try {
+                newOrderState.street = ''
+                newOrderState.neighborhood = ''
+                newOrderState.cityState = ''
+
+                const cepWithoutDash = cep.replace('-', '')
+                const response = await axios.get(
+                    `https://viacep.com.br/ws/${cepWithoutDash}/json/`
+                )
+
+                if (response.data && response.data.logradouro) {
+                    newOrderState.street = `${response.data.logradouro}`
+                    newOrderState.neighborhood = `${response.data.bairro}`
+                    newOrderState.cityState = `${response.data.localidade}/${response.data.uf}`
+                    cepValid.value = true
+                } else {
+                    InvalidCep()
+                    cepValid.value = false
+                }
+            } catch (error) {
+                InvalidCep()
+                cepValid.value = false
+            }
+
+            function InvalidCep() {
+                newOrderState.street = 'Verifique seu CEP'
+                newOrderState.neighborhood = 'Verifique seu CEP'
+                newOrderState.cityState = 'Verifique seu CEP'
+            }
+        }
+
+        const onNewOrderConfirm = async () => {
+            await formRef
+                .value!.validate()
+                .then(async () => {
+                    confirmLoading.value = true
+                    try {
+                        await api.post('/orders', newOrderState)
+                        await fetchData()
+                        confirmLoading.value = false
+
+                        successOrderCreated()
+                    } catch (error: any) {
+                        confirmLoading.value = false
+                        let erroModel: ErrorModel = error?.response?.data
+                        notifyError(erroModel)
+                    }
+                })
+                .catch((error) => {})
+        }
+
+        const successOrderCreated = () => {
+            Modal.confirm({
+                title: 'Pedido Realizado com Sucesso!',
+                icon: h(CheckOutlined, { style: 'color:green;' }),
+                content: h(
+                    'div',
+                    { style: 'padding-bottom:15px;' },
+                    'Deseja realizar um novo Pedido?'
+                ),
+                okText: 'Sim',
+                okType: 'primary',
+                cancelText: 'Não, obrigado',
+                onOk() {
+                    newOrderState.street = ''
+                    newOrderState.neighborhood = ''
+                    newOrderState.cityState = ''
+                    newOrderState.observation = ''
+                    newOrderState.postalCode = ''
+                    newOrderState.quantityRequested = 0
+                },
+                onCancel() {
+                    visible.value = false
+                    resetForm()
+                },
+                centered: true,
+            })
+        }
+        const resetForm = () => {
+            formRef.value!.resetFields()
+        }
 
         return {
             goBack,
@@ -440,6 +795,17 @@ export default defineComponent({
             locale,
             limpaPesquisa,
             rangePresets,
+            SearchOutlined,
+            PlusOutlined,
+            onNewOrderConfirm,
+            newOrderState,
+            formRef,
+            visible,
+            confirmLoading,
+            rules,
+            newOrderStepOne,
+            onInputCep,
+            resetForm,
         }
     },
 })
@@ -448,5 +814,10 @@ export default defineComponent({
 <style scoped>
 .content {
     border-radius: 12px;
+}
+
+.actions {
+    text-align: end;
+    margin-bottom: 1rem;
 }
 </style>

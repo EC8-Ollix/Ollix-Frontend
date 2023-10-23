@@ -7,6 +7,7 @@ interface State {
     user?: User
     token?: string
     isAdmin: boolean
+    sidebarCollapsed: boolean
 }
 
 const initialState: State = {
@@ -16,6 +17,7 @@ const initialState: State = {
         ? JSON.parse(localStorage.getItem('authUser') as string)
         : undefined,
     isAdmin: localStorage.getItem('isAdmin') === 'true',
+    sidebarCollapsed: false,
 }
 
 if (initialState.token) {
@@ -63,6 +65,10 @@ const store = createStore({
             state.token = ''
             state.isLoggedIn = false
             state.isAdmin = false
+            state.sidebarCollapsed = false
+        },
+        toggleSidebar(state: State) {
+            state.sidebarCollapsed = !state.sidebarCollapsed
         },
     },
     actions: {
@@ -72,11 +78,15 @@ const store = createStore({
         logOutUser(context) {
             context.commit('removeUser')
         },
+        toggleSidebar(context) {
+            context.commit('toggleSidebar')
+        },
     },
     getters: {
         isLoggedIn: (state: State) => state.isLoggedIn,
         user: (state: State) => state.user,
         isAdmin: (state: State) => state.isAdmin,
+        isSidebarCollapsed: (state: State) => state.sidebarCollapsed,
     },
 })
 
