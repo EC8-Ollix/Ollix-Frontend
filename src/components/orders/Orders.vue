@@ -401,7 +401,12 @@
                     <div class="order-address-details">
                         <p>
                             <span>CEP:</span>
-                            {{ orderSelected?.addressApp.postalCode }}
+                            {{
+                                formatCEP(
+                                    orderSelected?.addressApp
+                                        .postalCode as string
+                                )
+                            }}
                         </p>
                         <p>
                             <span>Logradouro:</span>
@@ -482,7 +487,20 @@
         </div>
 
         <template #footer fixed>
-            <div style="margin-top: 2rem">
+            <div style="margin-top: 2rem; display: flex; justify-content: end">
+                <div
+                    v-if="
+                        (orderSelected?.orderStatus ==
+                            OrderStatus.InstallationPending &&
+                            isAdmin) ||
+                        orderSelected?.orderStatus == OrderStatus.Completed
+                    "
+                >
+                    <a-button type="default" @click="openHelicesDetails"
+                        >Visualizar Hélices</a-button
+                    >
+                </div>
+
                 <div v-if="orderSelected?.orderStatus == OrderStatus.Pending">
                     <a-button
                         type="primary"
@@ -514,6 +532,7 @@
                         orderSelected?.orderStatus ==
                         OrderStatus.InstallationPending
                     "
+                    style="margin-left: 1rem"
                 >
                     <a-button
                         type="primary"
@@ -564,6 +583,31 @@
             </a-row>
         </a-form>
         <template #footer> </template>
+    </a-modal>
+
+    <a-modal
+        v-model:open="orderHelicesVisible"
+        title="Visualize as Hélices Cadastradas"
+        width="900px"
+    >
+        <div>
+            <HelicesByAddress
+                :clientId="orderSelected?.clientId"
+                :addressId="orderSelected?.addressId"
+                :orderId="orderSelectedId"
+                :viaClientScreen="true"
+            />
+        </div>
+        <template #footer fixed>
+            <div style="margin-top: 2rem">
+                <a-button
+                    type="primary"
+                    @click="closeHelicesDetails"
+                    v-if="isAdmin"
+                    >Fechar</a-button
+                >
+            </div>
+        </template>
     </a-modal>
 </template>
 
@@ -823,14 +867,6 @@ export default defineComponent({
             orderStatus: undefined,
         })
 
-        const rangeConfig = {
-            rules: [
-                {
-                    type: 'array' as const,
-                },
-            ],
-        }
-
         const handlePesquisa = async () => {
             await fetchData(true)
         }
@@ -1022,7 +1058,7 @@ export default defineComponent({
         const successOrderCreated = (orderNumber: string) => {
             Modal.confirm({
                 title: `Pedido ${orderNumber} Realizado com Sucesso!`,
-                icon: h(CheckOutlined, { style: 'color:green;' }),
+                icon: h(CheckCircleOutlined, { style: 'color:green;' }),
                 content: h(
                     'div',
                     { style: 'padding-bottom:15px;' },
@@ -1057,7 +1093,9 @@ export default defineComponent({
         }
 
         const visibleDetails = ref<boolean>(false)
+        const orderHelicesVisible = ref<boolean>(false)
         const orderSelected = ref<OrderData>()
+        const orderSelectedId = ref<string>()
 
         const viewOrderDetails = async (order: OrderData) => {
             orderSelected.value = order
@@ -1194,17 +1232,17 @@ export default defineComponent({
                 cancelText: 'Não, obrigado',
                 async onOk() {
                     try {
-                        const response = await api.patch(
+                        await api.patch(
                             `https://localhost:7219/api/orders/${
                                 orderSelected.value!.id
                             }/confirm-installation`
                         )
 
                         await fetchData(false)
-                        const orderConfirmResponse: OrderData = response.data
 
-                        orderSelected.value!.installationDate =
-                            orderConfirmResponse.installationDate
+                        orderSelected.value!.installationDate = dayjs(
+                            new Date()
+                        ).format()
 
                         orderSelected.value!.orderStatus = OrderStatus.Completed
 
@@ -1258,6 +1296,16 @@ export default defineComponent({
             console.log(val)
         })
 
+        const closeHelicesDetails = () => {
+            orderSelectedId.value = ''
+            orderHelicesVisible.value = false
+        }
+
+        const openHelicesDetails = () => {
+            orderSelectedId.value = orderSelected.value!.id
+            orderHelicesVisible.value = true
+        }
+
         return {
             goBack,
             data,
@@ -1273,7 +1321,6 @@ export default defineComponent({
             h,
             formState,
             handlePesquisa,
-            rangeConfig,
             dateFormat,
             isAdmin,
             locale,
@@ -1306,6 +1353,11 @@ export default defineComponent({
             onAproveOrderConfirm,
             onAproveOrderCancel,
             aproveFormRef,
+            orderHelicesVisible,
+            formatCEP,
+            orderSelectedId,
+            closeHelicesDetails,
+            openHelicesDetails,
         }
     },
 })

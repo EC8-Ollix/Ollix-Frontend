@@ -214,6 +214,78 @@ a:hover {
     padding-bottom: 0;
 }
 
+.ant-select-dropdown
+    .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+    color: rgba(0, 0, 0, 0.88) !important;
+    font-weight: 600 !important;
+}
+
+.ant-select-dropdown
+    .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+    background-color: transparent !important;
+}
+.ant-select-dropdown
+    .ant-select-item-option-active:not(.ant-select-item-option-disabled):hover {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+.ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-in-range::before {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.ant-picker-dropdown
+    .ant-picker-cell-in-view.ant-picker-cell-range-start:not(
+        .ant-picker-cell-range-start-single
+    )::before,
+.ant-picker-dropdown
+    .ant-picker-cell-in-view.ant-picker-cell-range-end:not(
+        .ant-picker-cell-range-end-single
+    )::before {
+    background: rgb(0 0 0 / 4%);
+}
+
+.ant-picker-dropdown
+    .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover::before,
+.ant-picker-dropdown
+    .ant-picker-cell-in-view.ant-picker-cell-range-start.ant-picker-cell-range-hover::before,
+.ant-picker-dropdown
+    .ant-picker-cell-in-view.ant-picker-cell-range-end.ant-picker-cell-range-hover::before,
+.ant-picker-dropdown
+    .ant-picker-cell-in-view.ant-picker-cell-range-start:not(
+        .ant-picker-cell-range-start-single
+    ).ant-picker-cell-range-hover-start::before,
+.ant-picker-dropdown
+    .ant-picker-cell-in-view.ant-picker-cell-range-end:not(
+        .ant-picker-cell-range-end-single
+    ).ant-picker-cell-range-hover-end::before,
+.ant-picker-panel
+    > :not(.ant-picker-date-panel)
+    .ant-picker-dropdown
+    .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-start::before,
+.ant-picker-panel
+    > :not(.ant-picker-date-panel)
+    .ant-picker-dropdown
+    .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-end::before {
+    background: rgb(0 0 0 / 20%);
+}
+
+.ant-picker-dropdown
+    .ant-picker-date-panel
+    .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-start
+    .ant-picker-cell-inner::after,
+.ant-picker-dropdown
+    .ant-picker-date-panel
+    .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-end
+    .ant-picker-cell-inner::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    background: rgb(0 0 0 / 20%);
+    transition: all 0.3s;
+    content: '';
+}
+
 @media (prefers-color-scheme: light) {
     :root {
         color: rgba(79, 79, 79, 0.87);

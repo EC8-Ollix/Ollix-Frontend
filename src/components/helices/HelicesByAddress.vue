@@ -80,7 +80,7 @@ import {
 } from '../../types/types'
 import { ErrorModel, notifyError } from '../../config/notification'
 import { formatStringDateToBR } from '../../composables/dateHelper'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 export default defineComponent({
     name: 'HelicesByAddress',
@@ -115,17 +115,17 @@ export default defineComponent({
             {
                 title: 'Hélice Id',
                 dataIndex: 'helixId',
-                width: '30%',
+                width: '20%',
             },
             {
-                title: 'Data da Instalação',
+                title: 'Dt. da Instalação',
                 dataIndex: 'installedDate',
                 width: '15%',
             },
             {
                 title: 'Endereço',
                 dataIndex: 'addressApp',
-                width: '40%',
+                width: '50%',
             },
             {
                 title: 'Ações',
@@ -164,6 +164,7 @@ export default defineComponent({
             }
             if (orderId.value) {
                 params.orderId = orderId.value
+                params.installed = undefined
             }
             try {
                 const response = await api.get<PaginationResponse<Helice>>(
@@ -184,9 +185,12 @@ export default defineComponent({
                 loading.value = false
             }
         }
+
         onMounted(fetchData)
 
         watch(pagination, fetchData, { deep: true })
+
+        watch(orderId, fetchData, { deep: true })
 
         const onShowSizeChange = (current: number, pageSize: number) => {
             pagination.value.page = current

@@ -7,7 +7,7 @@
             <div class="filtros">
                 <h3>Filtros</h3>
                 <a-row>
-                    <a-col class="filtros-input" :span="22">
+                    <a-col class="filtros-input" :span="20">
                         <a-row>
                             <a-col :span="8">
                                 <div>
@@ -35,6 +35,7 @@
                                     <a-input
                                         v-model:value="formState.cnpj"
                                         placeholder="CNPJ"
+                                        @input="onInput"
                                     >
                                     </a-input>
                                 </div>
@@ -59,9 +60,9 @@
                             </a-col>
                         </a-row>
                     </a-col>
-                    <a-col class="filtros-button" :span="2">
-                        <a-row>
-                            <a-col :span="24">
+                    <a-col class="filtros-button" :span="4">
+                        <a-row style="justify-content: space-between">
+                            <a-col :span="15">
                                 <div class="button-form-item">
                                     <a-button
                                         type="primary"
@@ -69,7 +70,18 @@
                                         style="width: 100%"
                                         @click="handlePesquisa"
                                     >
+                                        <SearchOutlined />
                                         Pesquisar
+                                    </a-button>
+                                </div>
+                            </a-col>
+                            <a-col :span="8">
+                                <div class="button-form-item">
+                                    <a-button
+                                        style="width: 100%"
+                                        @click="limpaPesquisa"
+                                    >
+                                        Limpar
                                     </a-button>
                                 </div>
                             </a-col>
@@ -171,6 +183,7 @@ import {
     AndroidOutlined,
     SmileOutlined,
     FileSearchOutlined,
+    SearchOutlined,
 } from '@ant-design/icons-vue'
 import { useNavigation } from '../../composables/useNavigation'
 import { Table } from 'ant-design-vue'
@@ -198,6 +211,7 @@ export default defineComponent({
         AndroidOutlined,
         SmileOutlined,
         FileSearchOutlined,
+        SearchOutlined,
         'a-table': Table,
     },
     setup() {
@@ -329,6 +343,58 @@ export default defineComponent({
         const handlePesquisa = async () => {
             await fetchData(true)
         }
+
+        const limpaPesquisa = async () => {
+            formState.active = 'true'
+            formState.bussinessName = undefined
+            formState.companyName = undefined
+            formState.cnpj = undefined
+        }
+
+        const formatCNPJ = (value: string) => {
+            const valueOnlyNumbers = value.replace(/[^\d]/g, '')
+            let formattedCNPJ = valueOnlyNumbers
+
+            if (valueOnlyNumbers.length > 12) {
+                formattedCNPJ = `${valueOnlyNumbers.slice(
+                    0,
+                    2
+                )}.${valueOnlyNumbers.slice(2, 5)}.${valueOnlyNumbers.slice(
+                    5,
+                    8
+                )}/${valueOnlyNumbers.slice(8, 12)}-${valueOnlyNumbers.slice(
+                    12,
+                    14
+                )}`
+            } else if (valueOnlyNumbers.length > 8) {
+                formattedCNPJ = `${valueOnlyNumbers.slice(
+                    0,
+                    2
+                )}.${valueOnlyNumbers.slice(2, 5)}.${valueOnlyNumbers.slice(
+                    5,
+                    8
+                )}/${valueOnlyNumbers.slice(8)}`
+            } else if (valueOnlyNumbers.length > 5) {
+                formattedCNPJ = `${valueOnlyNumbers.slice(
+                    0,
+                    2
+                )}.${valueOnlyNumbers.slice(2, 5)}.${valueOnlyNumbers.slice(5)}`
+            } else if (valueOnlyNumbers.length > 2) {
+                formattedCNPJ = `${valueOnlyNumbers.slice(
+                    0,
+                    2
+                )}.${valueOnlyNumbers.slice(2)}`
+            }
+
+            return formattedCNPJ
+        }
+
+        const onInput = (event: Event) => {
+            const target = event.target as HTMLInputElement
+            const value = target.value
+            formState.cnpj = formatCNPJ(value)
+        }
+
         return {
             goBack,
             activeKey,
@@ -344,6 +410,8 @@ export default defineComponent({
             FileSearchOutlined,
             formState,
             handlePesquisa,
+            limpaPesquisa,
+            onInput,
         }
     },
 })
