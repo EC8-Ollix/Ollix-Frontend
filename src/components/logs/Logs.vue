@@ -135,11 +135,15 @@ export default defineComponent({
             pageSize: 10,
         })
 
-        const fetchData = async () => {
+        const fetchData = async (isBySearch: boolean) => {
             loading.value = true
 
             const params: any = {
                 ...pagination.value,
+            }
+
+            if (isBySearch) {
+                params.pagination.page = 1
             }
 
             if (clientId.value) {
@@ -166,9 +170,9 @@ export default defineComponent({
             }
         }
 
-        onMounted(fetchData)
+        onMounted(() => fetchData(false))
 
-        watch(pagination, fetchData, { deep: true })
+        watch(pagination, () => fetchData(false), { deep: true })
 
         const onShowSizeChange = (current: number, pageSize: number) => {
             pagination.value.page = current

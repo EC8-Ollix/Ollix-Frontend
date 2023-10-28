@@ -200,6 +200,20 @@ a:hover {
     text-overflow: ellipsis;
 }
 
+.modal-order-details .ant-collapse .ant-collapse-item .ant-collapse-header {
+    font-size: 0.9rem;
+    color: #000000b0 !important;
+    font-weight: 600;
+    padding-left: 0;
+}
+.modal-order-details
+    .ant-collapse
+    .ant-collapse-content
+    .ant-collapse-content-box {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
 @media (prefers-color-scheme: light) {
     :root {
         color: rgba(79, 79, 79, 0.87);

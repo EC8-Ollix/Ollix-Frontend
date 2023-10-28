@@ -133,6 +133,8 @@
                                         query: {
                                             pagination:
                                                 JSON.stringify(pagination),
+                                            formState:
+                                                JSON.stringify(formState),
                                         },
                                     }"
                                 >
@@ -238,12 +240,16 @@ export default defineComponent({
             },
         ]
 
-        const fetchData = async () => {
+        const fetchData = async (isBySearch: boolean) => {
             loading.value = true
 
             const params = {
                 ...formState,
                 ...pagination.value,
+            }
+
+            if (isBySearch) {
+                params.page = 1
             }
 
             try {
@@ -268,16 +274,26 @@ export default defineComponent({
 
         const route = useRoute()
         onMounted(() => {
+            if (route.query.formState) {
+                let queryState = JSON.parse(
+                    route.query.formState as string
+                ) as FiltroClientState
+
+                formState.active = queryState.active
+                formState.bussinessName = queryState.bussinessName
+                formState.companyName = queryState.companyName
+                formState.cnpj = queryState.cnpj
+            }
             if (route.query.pagination) {
                 pagination.value = JSON.parse(
                     route.query.pagination as string
                 ) as PaginationRequest
             } else {
-                fetchData()
+                fetchData(false)
             }
         })
 
-        watch(pagination, fetchData, { deep: true })
+        watch(pagination, () => fetchData(false), { deep: true })
 
         const onShowSizeChange = (current: number, pageSize: number) => {
             pagination.value.page = current
@@ -311,7 +327,7 @@ export default defineComponent({
         })
 
         const handlePesquisa = async () => {
-            await fetchData()
+            await fetchData(true)
         }
         return {
             goBack,
@@ -336,6 +352,5 @@ export default defineComponent({
 <style scoped>
 .content {
     border-radius: 12px;
-    /* height: calc(100vh - 10rem); */
 }
 </style>
