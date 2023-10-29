@@ -126,7 +126,8 @@
                     </a-col>
                 </a-row>
             </div>
-            <div class="actions" v-if="!isAdmin">
+
+            <!-- <div class="actions" v-if="!isAdmin">
                 <a-row style="place-content: start">
                     <a-col>
                         <a-button
@@ -137,7 +138,7 @@
                         >
                     </a-col>
                 </a-row>
-            </div>
+            </div> -->
 
             <div class="table-results">
                 <a-config-provider>
@@ -232,6 +233,19 @@
             </div>
         </div>
     </a-layout-content>
+    <a-layout-footer v-if="!viaClientScreen" class="footer">
+        <a-row style="place-content: end">
+            <a-col>
+                <a-button
+                    type="primary"
+                    :icon="h(PlusOutlined)"
+                    @click="visible = true"
+                    v-if="!isAdmin"
+                    >Novo Pedido</a-button
+                >
+            </a-col>
+        </a-row></a-layout-footer
+    >
 
     <a-modal
         v-model:open="visible"

@@ -174,6 +174,8 @@
             </div>
         </div>
     </a-layout-content>
+
+    <a-layout-footer class="footer"></a-layout-footer>
 </template>
 
 <script lang="ts">
