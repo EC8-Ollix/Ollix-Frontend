@@ -293,26 +293,6 @@ a:hover {
     background-color: #4b4f511c !important;
 }
 
-footer.ant-layout-footer.footer {
-    background: rgb(255, 255, 255);
-    border-radius: 15px 15px 0 0;
-    margin-inline: 1rem;
-    position: fixed;
-    bottom: 0;
-    width: -webkit-fill-available;
-    height: 70px;
-    padding: 1.2rem 1.5rem 1rem 1.5rem;
-    border: 1px solid rgb(235, 237, 240);
-}
-
-.ant-layout-content .content {
-    padding: 20px !important;
-    background: rgb(255, 255, 255) !important;
-    max-height: 77vh !important;
-    overflow-y: auto !important;
-    margin-bottom: 55px !important;
-    padding-bottom: 30px !important;
-}
 @media (prefers-color-scheme: light) {
     :root {
         color: rgba(79, 79, 79, 0.87);

@@ -15,7 +15,7 @@
             "
             :class="{ content: !viaClientScreen }"
         >
-            <!-- <div class="actions">
+            <div class="actions" v-if="!viaClientScreen">
                 <a-row style="place-content: start">
                     <a-col>
                         <a-button
@@ -26,7 +26,7 @@
                         >
                     </a-col>
                 </a-row>
-            </div> -->
+            </div>
 
             <a-config-provider>
                 <template #renderEmpty>
@@ -59,19 +59,6 @@
             </a-pagination>
         </div>
     </a-layout-content>
-
-    <a-layout-footer v-if="!viaClientScreen" class="footer">
-        <a-row style="place-content: end">
-            <a-col>
-                <a-button
-                    type="primary"
-                    :icon="h(PlusOutlined)"
-                    @click="visible = true"
-                    >Novo Usuário</a-button
-                >
-            </a-col>
-        </a-row></a-layout-footer
-    >
 
     <a-modal v-model:open="visible" title="Crie um novo Usuário" width="480px">
         <a-form

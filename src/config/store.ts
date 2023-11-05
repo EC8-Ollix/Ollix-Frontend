@@ -26,6 +26,10 @@ if (initialState.token) {
 
 const state: State = initialState
 
+export function UpdateUser(user: User) {
+    store.dispatch('updateUser', user)
+}
+
 export function SetUserLoggedIn(userloginResponse: UserloginResponse) {
     SetUserLogout()
     store.dispatch('loginUser', userloginResponse)
@@ -60,6 +64,9 @@ const store = createStore({
             state.isLoggedIn = true
             state.isAdmin = (userloginResponse.user.userType ?? -1) === 0
         },
+        updateUser(state: State, user: User) {
+            state.user = user
+        },
         removeUser(state: State) {
             state.user = undefined
             state.token = ''
@@ -74,6 +81,9 @@ const store = createStore({
     actions: {
         loginUser(context, userloginResponse: UserloginResponse) {
             context.commit('setUser', userloginResponse)
+        },
+        updateUser(context, userloginResponse: UserloginResponse) {
+            context.commit('updateUser', userloginResponse)
         },
         logOutUser(context) {
             context.commit('removeUser')

@@ -52,7 +52,7 @@
                                     </a-input>
                                 </div>
                             </a-col>
-                            <a-col :span="8">
+                            <a-col :span="7">
                                 <div>
                                     <div class="perso-label">
                                         Data da Solicitação
@@ -68,7 +68,7 @@
                                     />
                                 </div>
                             </a-col>
-                            <a-col :span="4">
+                            <a-col :span="5">
                                 <div>
                                     <div class="perso-label">Status</div>
 
@@ -101,7 +101,7 @@
                     </a-col>
                     <a-col class="filtros-button" :span="4">
                         <a-row style="justify-content: space-between">
-                            <a-col :span="15">
+                            <a-col :span="14">
                                 <div class="button-form-item">
                                     <a-button
                                         type="primary"
@@ -112,7 +112,7 @@
                                     </a-button>
                                 </div>
                             </a-col>
-                            <a-col :span="8">
+                            <a-col :span="9">
                                 <div class="button-form-item">
                                     <a-button
                                         style="width: 100%"
@@ -127,7 +127,7 @@
                 </a-row>
             </div>
 
-            <!-- <div class="actions" v-if="!isAdmin">
+            <div class="actions" v-if="!isAdmin">
                 <a-row style="place-content: start">
                     <a-col>
                         <a-button
@@ -138,7 +138,7 @@
                         >
                     </a-col>
                 </a-row>
-            </div> -->
+            </div>
 
             <div class="table-results">
                 <a-config-provider>
@@ -233,19 +233,6 @@
             </div>
         </div>
     </a-layout-content>
-    <a-layout-footer v-if="!viaClientScreen" class="footer">
-        <a-row style="place-content: end">
-            <a-col>
-                <a-button
-                    type="primary"
-                    :icon="h(PlusOutlined)"
-                    @click="visible = true"
-                    v-if="!isAdmin"
-                    >Novo Pedido</a-button
-                >
-            </a-col>
-        </a-row></a-layout-footer
-    >
 
     <a-modal
         v-model:open="visible"

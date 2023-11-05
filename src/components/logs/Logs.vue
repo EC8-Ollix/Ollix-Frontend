@@ -108,7 +108,7 @@
                     </a-col>
                     <a-col class="filtros-button" :span="4">
                         <a-row style="justify-content: space-between">
-                            <a-col :span="15">
+                            <a-col :span="14">
                                 <div class="button-form-item">
                                     <a-button
                                         type="primary"
@@ -119,7 +119,7 @@
                                     </a-button>
                                 </div>
                             </a-col>
-                            <a-col :span="8">
+                            <a-col :span="9">
                                 <div class="button-form-item">
                                     <a-button
                                         style="width: 100%"
@@ -176,7 +176,6 @@
             </div>
         </div>
     </a-layout-content>
-    <a-layout-footer v-if="!viaClientScreen" class="footer"></a-layout-footer>
 </template>
 
 <script lang="ts">
@@ -247,7 +246,7 @@ export default defineComponent({
             columns.push({
                 title: 'Id da Entidade',
                 dataIndex: 'entityId',
-                width: '15%',
+                width: '18%',
             })
         }
 
@@ -264,7 +263,7 @@ export default defineComponent({
         columns.push({
             title: 'Operação',
             dataIndex: 'operation',
-            width: '10%',
+            width: '7%',
         })
         columns.push({
             title: 'Usuário',
