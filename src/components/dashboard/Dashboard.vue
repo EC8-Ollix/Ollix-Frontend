@@ -1,15 +1,14 @@
 <template>
-    <a-page-header
-        class="pageHeader"
-        title="Bem vindo ao Ollix!"
-        sub-title="Lorem ipsum dolor sit amet"
-        @back="goBack"
-    />
-
     <a-layout-content :style="{ margin: '10px 16px 25px' }">
         <div :style="{ padding: '20px', background: '#fff' }" class="content">
-            <a-divider />
-            <h4>Bem vindo {{ user.firstName }}</h4>
+            <a-result
+                title="Em breve..."
+                sub-title="Desculpe, aqui ainda não está pronto, em breve estará finalizado!"
+            >
+                <template #icon>
+                    <img src="/building.svg" style="width: 40%" />
+                </template>
+            </a-result>
         </div>
     </a-layout-content>
 </template>
@@ -37,5 +36,12 @@ export default defineComponent({
 <style scoped>
 .content {
     border-radius: 12px;
+    height: 90vh !important;
+    max-height: 90vh !important;
+    margin-bottom: 0px !important;
+    padding-bottom: 0px !important;
+    display: flex;
+    align-items: center;
+    place-content: center;
 }
 </style>

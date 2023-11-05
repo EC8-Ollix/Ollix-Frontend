@@ -18,9 +18,19 @@
             <div class="filtros">
                 <h3>Filtros</h3>
                 <a-row>
-                    <a-col class="filtros-input" :span="19">
+                    <a-col class="filtros-input" :span="20">
                         <a-row>
-                            <a-col :span="8" v-if="isAdmin">
+                            <a-col :span="6">
+                                <div>
+                                    <div class="perso-label">N. do Pedido</div>
+                                    <a-input
+                                        v-model:value="formState.orderNumber"
+                                        placeholder="N. do Pedido"
+                                    >
+                                    </a-input>
+                                </div>
+                            </a-col>
+                            <a-col :span="6" v-if="isAdmin && !viaClientScreen">
                                 <div>
                                     <div class="perso-label">Cliente</div>
                                     <a-input
@@ -30,7 +40,7 @@
                                     </a-input>
                                 </div>
                             </a-col>
-                            <a-col :span="8" v-if="!isAdmin">
+                            <a-col :span="6" v-if="!isAdmin || viaClientScreen">
                                 <div>
                                     <div class="perso-label">Solicitante</div>
                                     <a-input
@@ -42,7 +52,7 @@
                                     </a-input>
                                 </div>
                             </a-col>
-                            <a-col :span="9">
+                            <a-col :span="7">
                                 <div>
                                     <div class="perso-label">
                                         Data da Solicitação
@@ -54,10 +64,11 @@
                                         style="width: 100%"
                                         :locale="locale"
                                         :presets="rangePresets"
+                                        :allowClear="false"
                                     />
                                 </div>
                             </a-col>
-                            <a-col :span="7">
+                            <a-col :span="5">
                                 <div>
                                     <div class="perso-label">Status</div>
 
@@ -88,9 +99,9 @@
                             </a-col>
                         </a-row>
                     </a-col>
-                    <a-col class="filtros-button" :span="5">
+                    <a-col class="filtros-button" :span="4">
                         <a-row style="justify-content: space-between">
-                            <a-col :span="15">
+                            <a-col :span="14">
                                 <div class="button-form-item">
                                     <a-button
                                         type="primary"
@@ -101,7 +112,7 @@
                                     </a-button>
                                 </div>
                             </a-col>
-                            <a-col :span="8">
+                            <a-col :span="9">
                                 <div class="button-form-item">
                                     <a-button
                                         style="width: 100%"
@@ -115,6 +126,7 @@
                     </a-col>
                 </a-row>
             </div>
+
             <div class="actions" v-if="!isAdmin">
                 <a-row style="place-content: start">
                     <a-col>
@@ -127,118 +139,6 @@
                     </a-col>
                 </a-row>
             </div>
-
-            <a-modal
-                v-model:open="visible"
-                title="Realize seu Pedido de Hélices!"
-                :confirm-loading="confirmLoading"
-                width="750px"
-            >
-                <a-form
-                    ref="formRef"
-                    :rules="rules"
-                    :model="newOrderState"
-                    layout="vertical"
-                    name="form_in_modal"
-                >
-                    <a-row style="margin-top: 15px">
-                        <a-col :span="12">
-                            <a-form-item name="requesterName" label="Nome">
-                                <a-input
-                                    v-model:value="newOrderState.requesterName"
-                                    placeholder="Nome"
-                                />
-                            </a-form-item>
-                        </a-col>
-                        <a-col :span="1"> </a-col>
-                        <a-col :span="11">
-                            <a-form-item name="requesterEmail" label="Email">
-                                <a-input
-                                    v-model:value="newOrderState.requesterEmail"
-                                    placeholder="Email"
-                                />
-                            </a-form-item>
-                        </a-col>
-                    </a-row>
-                    <a-form-item name="observation" label="Observação">
-                        <a-textarea
-                            v-model:value="newOrderState.observation"
-                            placeholder="Observação"
-                        />
-                    </a-form-item>
-                    <a-row style="margin-top: 15px">
-                        <a-col :span="3">
-                            <a-form-item
-                                name="quantityRequested"
-                                label="Quantidade"
-                            >
-                                <a-input-number
-                                    v-model:value="
-                                        newOrderState.quantityRequested
-                                    "
-                                    placeholder="Qtde"
-                                    :min="1"
-                                />
-                            </a-form-item>
-                        </a-col>
-                        <a-col :span="1"> </a-col>
-                        <a-col :span="5">
-                            <a-form-item name="postalCode" label="CEP">
-                                <a-input
-                                    v-model:value="newOrderState.postalCode"
-                                    placeholder="CEP"
-                                    :max-length="9"
-                                    :min-length="9"
-                                    @input="onInputCep"
-                                    style="width: 100%"
-                                />
-                            </a-form-item>
-                        </a-col>
-                        <a-col :span="1"> </a-col>
-                        <a-col :span="14">
-                            <a-form-item name="address" label="Endereço">
-                                <a-input
-                                    v-model:value="newOrderState.street"
-                                    placeholder="Endereço"
-                                    :readonly="true"
-                                />
-                            </a-form-item>
-                        </a-col>
-                    </a-row>
-                    <a-row>
-                        <a-col :span="9">
-                            <a-form-item name="neighborhood" label="Bairro">
-                                <a-input
-                                    v-model:value="newOrderState.neighborhood"
-                                    placeholder="Bairro"
-                                    :readonly="true"
-                                />
-                            </a-form-item>
-                        </a-col>
-                        <a-col :span="1"> </a-col>
-                        <a-col :span="14">
-                            <a-form-item name="cityState" label="Cidade/Estado">
-                                <a-input
-                                    v-model:value="newOrderState.cityState"
-                                    placeholder="Cidade/Estado"
-                                    :readonly="true"
-                                />
-                            </a-form-item>
-                        </a-col>
-                    </a-row>
-                </a-form>
-                <template #footer>
-                    <a-button style="margin-left: 10px" @click="resetForm"
-                        >Limpar</a-button
-                    >
-                    <a-button
-                        type="primary"
-                        @click="onNewOrderConfirm"
-                        :loading="confirmLoading"
-                        >Confirmar Pedido</a-button
-                    >
-                </template>
-            </a-modal>
 
             <div class="table-results">
                 <a-config-provider>
@@ -303,7 +203,11 @@
                                 <div>
                                     <a-button
                                         :icon="h(FileTextOutlined)"
-                                        href="https://www.google.com"
+                                        @click="
+                                            viewOrderDetails(
+                                                record as OrderData
+                                            )
+                                        "
                                         size="small"
                                     >
                                         Visualizar
@@ -329,6 +233,383 @@
             </div>
         </div>
     </a-layout-content>
+
+    <a-modal
+        v-model:open="visible"
+        title="Realize seu Pedido de Hélices!"
+        :confirm-loading="confirmLoading"
+        width="750px"
+    >
+        <a-form
+            ref="formRef"
+            :rules="rules"
+            :model="newOrderState"
+            layout="vertical"
+            name="form_in_modal"
+        >
+            <a-row style="margin-top: 15px">
+                <a-col :span="12">
+                    <a-form-item name="requesterName" label="Nome">
+                        <a-input
+                            v-model:value="newOrderState.requesterName"
+                            placeholder="Nome"
+                        />
+                    </a-form-item>
+                </a-col>
+                <a-col :span="1"> </a-col>
+                <a-col :span="11">
+                    <a-form-item name="requesterEmail" label="Email">
+                        <a-input
+                            v-model:value="newOrderState.requesterEmail"
+                            placeholder="Email"
+                        />
+                    </a-form-item>
+                </a-col>
+            </a-row>
+            <a-form-item name="observation" label="Observação">
+                <a-textarea
+                    v-model:value="newOrderState.observation"
+                    placeholder="Observação"
+                />
+            </a-form-item>
+            <a-row style="margin-top: 15px">
+                <a-col :span="3">
+                    <a-form-item name="quantityRequested" label="Quantidade">
+                        <a-input-number
+                            v-model:value="newOrderState.quantityRequested"
+                            placeholder="Qtde"
+                            :min="1"
+                        />
+                    </a-form-item>
+                </a-col>
+                <a-col :span="1"> </a-col>
+                <a-col :span="5">
+                    <a-form-item name="postalCode" label="CEP">
+                        <a-input
+                            v-model:value="newOrderState.postalCode"
+                            placeholder="CEP"
+                            :max-length="9"
+                            :min-length="9"
+                            @input="onInputCep"
+                            style="width: 100%"
+                        />
+                    </a-form-item>
+                </a-col>
+                <a-col :span="1"> </a-col>
+                <a-col :span="14">
+                    <a-form-item name="address" label="Endereço">
+                        <a-input
+                            v-model:value="newOrderState.street"
+                            placeholder="Endereço"
+                            :readonly="true"
+                        />
+                    </a-form-item>
+                </a-col>
+            </a-row>
+            <a-row>
+                <a-col :span="9">
+                    <a-form-item name="neighborhood" label="Bairro">
+                        <a-input
+                            v-model:value="newOrderState.neighborhood"
+                            placeholder="Bairro"
+                            :readonly="true"
+                        />
+                    </a-form-item>
+                </a-col>
+                <a-col :span="1"> </a-col>
+                <a-col :span="14">
+                    <a-form-item name="cityState" label="Cidade/Estado">
+                        <a-input
+                            v-model:value="newOrderState.cityState"
+                            placeholder="Cidade/Estado"
+                            :readonly="true"
+                        />
+                    </a-form-item>
+                </a-col>
+            </a-row>
+        </a-form>
+        <template #footer>
+            <a-button style="margin-left: 10px" @click="resetForm"
+                >Limpar</a-button
+            >
+            <a-button
+                type="primary"
+                @click="onNewOrderConfirm"
+                :loading="confirmLoading"
+                >Confirmar Pedido</a-button
+            >
+        </template>
+    </a-modal>
+
+    <a-modal v-model:open="visibleDetails" width="800px" @cancel="closeModal">
+        <div class="order-header">
+            <h4 style="font-size: 0.9rem">
+                <strong>Número do Pedido:</strong>
+                {{ orderSelected?.orderNumber }}
+            </h4>
+            <span style="margin-right: 2rem">
+                <a-tag
+                    :color="getTagForOrderStatus((orderSelected as OrderData).orderStatus).color"
+                >
+                    <template
+                        v-if="getTagForOrderStatus((orderSelected as OrderData).orderStatus).icon"
+                        #icon
+                    >
+                        <component
+                            :is="getTagForOrderStatus((orderSelected as OrderData).orderStatus).icon"
+                        />
+                    </template>
+                    {{
+                        getTagForOrderStatus(
+                            (orderSelected as OrderData).orderStatus
+                        ).text
+                    }}
+                </a-tag>
+            </span>
+        </div>
+
+        <div class="modal-order-details">
+            <a-collapse v-model:activeKey="collapseOrderKey" ghost>
+                <a-collapse-panel key="1" header="Detalhes do Solicitante">
+                    <div class="requester-details">
+                        <p>
+                            <span>Nome:</span>
+                            {{ orderSelected?.requesterName }}
+                        </p>
+                        <p>
+                            <span>Email:</span
+                            >{{ orderSelected?.requesterEmail }}
+                        </p>
+                    </div>
+                </a-collapse-panel>
+                <a-collapse-panel key="2" header="Detalhes do Pedido">
+                    <div class="order-details">
+                        <p>
+                            <span>Data do Pedido:</span>
+                            {{
+                                formatStringDateToBR(
+                                    orderSelected?.requestDate as string
+                                )
+                            }}
+                        </p>
+                        <p>
+                            <span>Quantidade Solicitada:</span>
+                            {{ orderSelected?.quantityRequested }}
+                        </p>
+                    </div>
+                </a-collapse-panel>
+                <a-collapse-panel key="3" header="Endereço">
+                    <div class="order-address-details">
+                        <p>
+                            <span>CEP:</span>
+                            {{
+                                formatCEP(
+                                    orderSelected?.addressApp
+                                        .postalCode as string
+                                )
+                            }}
+                        </p>
+                        <p>
+                            <span>Logradouro:</span>
+                            {{ orderSelected?.addressApp.street }}
+                        </p>
+                        <p>
+                            <span>Bairro:</span>
+                            {{ orderSelected?.addressApp.neighborhood }}
+                        </p>
+                        <p>
+                            <span>Cidade/Estado:</span>
+                            {{ orderSelected?.addressApp.city }}/{{
+                                orderSelected?.addressApp.state
+                            }}
+                        </p>
+                    </div>
+                </a-collapse-panel>
+                <a-collapse-panel
+                    key="4"
+                    header="Observações"
+                    v-if="orderSelected?.observation"
+                >
+                    <div>
+                        <p style="color: #01010194">
+                            {{ orderSelected?.observation }}
+                        </p>
+                    </div>
+                </a-collapse-panel>
+                <a-collapse-panel
+                    key="5"
+                    header="Outras Informações"
+                    v-if="orderSelected?.installationDate"
+                >
+                    <div
+                        class="order-details-installation"
+                        v-if="orderSelected?.installationDate"
+                    >
+                        <p>
+                            <span>Status:</span>
+                            <span
+                                v-if="
+                            orderSelected?.orderStatus ==
+                            OrderStatus.InstallationPending && 
+                            new Date(orderSelected?.installationDate as string).getDate() <= new Date().getDate()
+                        "
+                            >
+                                Pendente de Instalação
+                            </span>
+                            <span
+                                v-if="
+                            orderSelected?.orderStatus ==
+                            OrderStatus.InstallationPending && 
+                            new Date(orderSelected?.installationDate as string).getDate() > new Date().getDate()
+                        "
+                            >
+                                Instalação Atrasada
+                            </span>
+                            <span
+                                v-if="
+                                    orderSelected?.orderStatus ==
+                                    OrderStatus.Completed
+                                "
+                            >
+                                Instalação Concluída
+                            </span>
+                        </p>
+                        <p>
+                            <span>Data da Instalação:</span>
+                            {{
+                                formatStringDateToBR(
+                                    orderSelected?.installationDate as string
+                                )
+                            }}
+                        </p>
+                    </div>
+                </a-collapse-panel>
+            </a-collapse>
+        </div>
+
+        <template #footer fixed>
+            <div style="margin-top: 2rem; display: flex; justify-content: end">
+                <div
+                    v-if="
+                        (orderSelected?.orderStatus ==
+                            OrderStatus.InstallationPending &&
+                            isAdmin) ||
+                        orderSelected?.orderStatus == OrderStatus.Completed
+                    "
+                >
+                    <a-button type="default" @click="openHelicesDetails"
+                        >Visualizar Hélices</a-button
+                    >
+                </div>
+
+                <div v-if="orderSelected?.orderStatus == OrderStatus.Pending">
+                    <a-button
+                        type="primary"
+                        @click="approveOrder"
+                        :loading="false"
+                        v-if="isAdmin"
+                        style="background-color: #42db42d4"
+                        >Aprovar Pedido</a-button
+                    >
+                    <a-button
+                        type="primary"
+                        @click="denyOrder"
+                        :loading="false"
+                        v-if="isAdmin"
+                        style="background-color: #db4242d4"
+                        >Negar Pedido</a-button
+                    >
+                    <a-button
+                        type="primary"
+                        @click="cancelOrder"
+                        :loading="false"
+                        v-if="!isAdmin"
+                        style="background-color: #db4242d4"
+                        >Cancelar Pedido</a-button
+                    >
+                </div>
+                <div
+                    v-if="
+                        orderSelected?.orderStatus ==
+                        OrderStatus.InstallationPending
+                    "
+                    style="margin-left: 1rem"
+                >
+                    <a-button
+                        type="primary"
+                        @click="confirmOrderInstallation"
+                        :loading="false"
+                        v-if="isAdmin"
+                        style="background-color: #42db42d4"
+                        >Confirmar Instalação</a-button
+                    >
+                </div>
+            </div>
+        </template>
+    </a-modal>
+
+    <a-modal
+        v-model:open="aproveOrderVisible"
+        title="Selecione a Data para a Instalação do Pedido"
+        :confirm-loading="aproveOrderLoading"
+        @cancel="onAproveOrderCancel"
+        width="490px"
+    >
+        <a-form
+            ref="aproveFormRef"
+            :model="aproveOrderState"
+            layout="vertical"
+            name="form_in_modal"
+        >
+            <a-row style="margin-top: 35px">
+                <a-col :span="12">
+                    <a-form-item style="margin-bottom: 0px">
+                        <a-date-picker
+                            v-model:value="aproveOrderState.installationDate"
+                            :format="dateFormat"
+                            style="width: 100%"
+                            :locale="locale"
+                            :allowClear="false"
+                        />
+                    </a-form-item>
+                </a-col>
+                <a-col :span="12" style="text-align: right">
+                    <a-button
+                        type="primary"
+                        @click="onAproveOrderConfirm"
+                        :loading="confirmLoading"
+                        >Confirmar Aprovação</a-button
+                    >
+                </a-col>
+            </a-row>
+        </a-form>
+        <template #footer> </template>
+    </a-modal>
+
+    <a-modal
+        v-model:open="orderHelicesVisible"
+        title="Visualize as Hélices Cadastradas"
+        width="900px"
+    >
+        <div>
+            <HelicesByAddress
+                :clientId="orderSelected?.clientId"
+                :addressId="orderSelected?.addressId"
+                :orderId="orderSelectedId"
+                :viaClientScreen="true"
+            />
+        </div>
+        <template #footer fixed>
+            <div style="margin-top: 2rem">
+                <a-button
+                    type="primary"
+                    @click="closeHelicesDetails"
+                    v-if="isAdmin"
+                    >Fechar</a-button
+                >
+            </div>
+        </template>
+    </a-modal>
 </template>
 
 <script lang="ts">
@@ -350,6 +631,8 @@ import {
     SearchOutlined,
     PlusOutlined,
     CheckOutlined,
+    CheckCircleOutlined,
+    CloseCircleOutlined,
 } from '@ant-design/icons-vue'
 import { useNavigation } from '../../composables/useNavigation'
 import { formatStringDateToBR } from '../../composables/dateHelper'
@@ -381,9 +664,14 @@ dayjs.locale('pt-br')
 import type { FormInstance } from 'ant-design-vue'
 import type { Rule } from 'ant-design-vue/es/form'
 import axios from 'axios'
-import { Modal } from 'ant-design-vue'
+import { Modal, ModalFuncProps } from 'ant-design-vue'
 
-import { createVNode } from 'vue'
+import HelicesByAddress from '../helices/HelicesByAddress.vue'
+
+import OrderDetails from './OrderDetails.vue'
+import { OrderStatus } from '../../types/order/orderStatus'
+
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 
 interface NewOrderState {
     requesterName: string
@@ -396,7 +684,12 @@ interface NewOrderState {
     cityState: string
 }
 
+interface ProcessOrderState {
+    installationDate: Dayjs
+}
+
 interface FiltroOrderState {
+    orderNumber: string | undefined
     clientSearch: string | undefined
     requesterSearch: string | undefined
     requestedDate: [Dayjs, Dayjs]
@@ -419,6 +712,10 @@ export default defineComponent({
         SmileOutlined,
         SearchOutlined,
         PlusOutlined,
+        CheckCircleOutlined,
+        CloseCircleOutlined,
+        HelicesByAddress,
+        OrderDetails,
         'a-table': Table,
     },
     setup(props) {
@@ -446,14 +743,20 @@ export default defineComponent({
                 width: '10%',
             },
             {
+                title: 'N. do Pedido',
+                dataIndex: 'orderNumber',
+                width: '10%',
+            },
+            {
                 title: 'Cliente',
                 dataIndex: 'client',
                 width: '20%',
             },
+
             {
                 title: 'Nome',
                 dataIndex: 'requesterName',
-                width: '25%',
+                width: '20%',
             },
             {
                 title: 'Email',
@@ -461,9 +764,9 @@ export default defineComponent({
                 width: '20%',
             },
             {
-                title: 'Data da Solicitação',
+                title: 'Dt. da Solicitação',
                 dataIndex: 'requestDate',
-                width: '15%',
+                width: '10%',
             },
             {
                 title: 'Qtd.',
@@ -481,14 +784,19 @@ export default defineComponent({
             columns = columns.filter((column) => column.dataIndex !== 'client')
         }
 
-        const fetchData = async () => {
+        const fetchData = async (isBySearch: boolean) => {
             loading.value = true
 
             const params: any = {
                 requestedDateFrom: formState.requestedDate[0].toDate(),
                 requestedDateTo: formState.requestedDate[1].toDate(),
                 ...formState,
+
                 ...pagination.value,
+            }
+
+            if (isBySearch) {
+                params.page = 1
             }
 
             if (clientId.value) {
@@ -515,9 +823,9 @@ export default defineComponent({
             }
         }
 
-        onMounted(fetchData)
+        onMounted(() => fetchData(false))
 
-        watch(pagination, fetchData, { deep: true })
+        watch(pagination, () => fetchData(false), { deep: true })
 
         const onShowSizeChange = (current: number, pageSize: number) => {
             pagination.value.page = current
@@ -553,24 +861,18 @@ export default defineComponent({
         ])
 
         const formState: FiltroOrderState = reactive({
+            orderNumber: undefined,
             clientSearch: undefined,
             requesterSearch: undefined,
             requestedDate: initialDates.value,
             orderStatus: undefined,
         })
 
-        const rangeConfig = {
-            rules: [
-                {
-                    type: 'array' as const,
-                },
-            ],
-        }
-
         const handlePesquisa = async () => {
-            await fetchData()
+            await fetchData(true)
         }
         const limpaPesquisa = async () => {
+            formState.orderNumber = undefined
             formState.clientSearch = undefined
             formState.requesterSearch = undefined
             formState.orderStatus = undefined
@@ -601,7 +903,12 @@ export default defineComponent({
                 {
                     max: 200,
                     message:
-                        'O Nome do Solicitante deve ter no máximo 200 caracteres',
+                        'O Email do Solicitante deve ter no máximo 200 caracteres',
+                    trigger: 'blur',
+                },
+                {
+                    type: 'email',
+                    message: 'O Email está inválido',
                     trigger: 'blur',
                 },
             ],
@@ -731,11 +1038,15 @@ export default defineComponent({
                 .then(async () => {
                     confirmLoading.value = true
                     try {
-                        await api.post('/orders', newOrderState)
-                        await fetchData()
+                        const response = await api.post(
+                            '/orders',
+                            newOrderState
+                        )
+                        const newOrderResponse: OrderData = response.data
+                        await fetchData(false)
                         confirmLoading.value = false
 
-                        successOrderCreated()
+                        successOrderCreated(newOrderResponse.orderNumber)
                     } catch (error: any) {
                         confirmLoading.value = false
                         let erroModel: ErrorModel = error?.response?.data
@@ -745,15 +1056,16 @@ export default defineComponent({
                 .catch((error) => {})
         }
 
-        const successOrderCreated = () => {
+        const successOrderCreated = (orderNumber: string) => {
             Modal.confirm({
-                title: 'Pedido Realizado com Sucesso!',
-                icon: h(CheckOutlined, { style: 'color:green;' }),
+                title: `Pedido ${orderNumber} Realizado com Sucesso!`,
+                icon: h(CheckCircleOutlined, { style: 'color:green;' }),
                 content: h(
                     'div',
                     { style: 'padding-bottom:15px;' },
                     'Deseja realizar um novo Pedido?'
                 ),
+                width: '490px',
                 okText: 'Sim',
                 okType: 'primary',
                 cancelText: 'Não, obrigado',
@@ -769,11 +1081,230 @@ export default defineComponent({
                     visible.value = false
                     resetForm()
                 },
-                centered: true,
             })
         }
         const resetForm = () => {
+            newOrderState.street = ''
+            newOrderState.neighborhood = ''
+            newOrderState.cityState = ''
+            newOrderState.observation = ''
+            newOrderState.postalCode = ''
+            newOrderState.quantityRequested = 0
             formRef.value!.resetFields()
+        }
+
+        const visibleDetails = ref<boolean>(false)
+        const orderHelicesVisible = ref<boolean>(false)
+        const orderSelected = ref<OrderData>()
+        const orderSelectedId = ref<string>()
+
+        const viewOrderDetails = async (order: OrderData) => {
+            orderSelected.value = order
+            visibleDetails.value = true
+        }
+
+        const closeModal = (e: MouseEvent) => {
+            visibleDetails.value = false
+            collapseOrderKey.value = []
+        }
+
+        const aproveOrderVisible = ref<boolean>(false)
+        const aproveOrderLoading = ref<boolean>(false)
+        const aproveFormRef = ref<FormInstance>()
+
+        const aproveOrderState = reactive<ProcessOrderState>({
+            installationDate: dayjs(currentDate, dateFormat),
+        })
+
+        const approveOrder = (e: MouseEvent) => {
+            aproveOrderVisible.value = true
+        }
+
+        const onAproveOrderCancel = () => {
+            aproveOrderVisible.value = false
+        }
+
+        const onAproveOrderConfirm = async () => {
+            await aproveFormRef
+                .value!.validate()
+                .then(async () => {
+                    aproveOrderLoading.value = true
+                    try {
+                        const requestData = {
+                            approved: true,
+                            installationDate:
+                                aproveOrderState.installationDate.format(),
+                        }
+
+                        const response = await api.patch(
+                            `https://localhost:7219/api/orders/${
+                                orderSelected.value!.id
+                            }/process`,
+                            requestData
+                        )
+
+                        const orderAprovedResponse: OrderData = response.data
+
+                        await fetchData(false)
+                        aproveOrderLoading.value = false
+                        orderSelected.value!.installationDate =
+                            orderAprovedResponse.installationDate
+
+                        orderSelected.value!.orderStatus =
+                            OrderStatus.InstallationPending
+
+                        notifySuccess({
+                            successTitle: 'Pedido Aprovado com sucesso!',
+                        })
+
+                        aproveOrderVisible.value = false
+                    } catch (error: any) {
+                        aproveOrderLoading.value = false
+                        let erroModel: ErrorModel = error?.response?.data
+                        notifyError(erroModel)
+                    }
+                })
+                .catch((error) => {})
+        }
+
+        const [modal, contextHolder] = Modal.useModal()
+
+        const denyOrder = async (e: MouseEvent) => {
+            Modal.confirm({
+                title: `Tem certeza de que deseja negar esse pedido?`,
+                icon: h(CloseCircleOutlined, { style: 'color:red;' }),
+                width: '490px',
+                okText: 'Sim, tenho certeza',
+                okType: 'primary',
+                cancelText: 'Não, obrigado',
+                async onOk() {
+                    try {
+                        const requestData = {
+                            approved: false,
+                        }
+
+                        const response = await api.patch(
+                            `https://localhost:7219/api/orders/${
+                                orderSelected.value!.id
+                            }/process`,
+                            requestData
+                        )
+
+                        const orderAprovedResponse: OrderData = response.data
+
+                        await fetchData(false)
+                        aproveOrderLoading.value = false
+
+                        orderSelected.value = orderAprovedResponse
+
+                        notifySuccess({
+                            successTitle: 'Pedido Negado com sucesso!',
+                        })
+                    } catch (error: any) {
+                        let erroModel: ErrorModel = error?.response?.data
+                        notifyError(erroModel)
+                    }
+                },
+                onCancel() {},
+            })
+        }
+
+        const confirmOrderInstallation = () => {
+            let isInstallationDateEarly = true
+            let content = undefined
+
+            if (isInstallationDateEarly) {
+                content = h(
+                    'div',
+                    { style: 'padding-bottom:15px;' },
+                    `Esse pedido estará sendo instalado antes da data prevista do dia ${formatStringDateToBR(
+                        orderSelected.value!.installationDate
+                    )}?`
+                )
+            }
+
+            Modal.confirm({
+                title: `Tem certeza de que deseja confirmar a instalação desse pedido?`,
+                icon: h(CheckCircleOutlined, { style: 'color:green;' }),
+                width: '620px',
+                content: content,
+                okText: 'Sim, tenho certeza',
+                okType: 'primary',
+                cancelText: 'Não, obrigado',
+                async onOk() {
+                    try {
+                        await api.patch(
+                            `https://localhost:7219/api/orders/${
+                                orderSelected.value!.id
+                            }/confirm-installation`
+                        )
+
+                        await fetchData(false)
+
+                        orderSelected.value!.installationDate = dayjs(
+                            new Date()
+                        ).format()
+
+                        orderSelected.value!.orderStatus = OrderStatus.Completed
+
+                        notifySuccess({
+                            successTitle: 'Instalação confirmada com sucesso!',
+                        })
+                    } catch (error: any) {
+                        let erroModel: ErrorModel = error?.response?.data
+                        notifyError(erroModel)
+                    }
+                },
+                onCancel() {},
+            })
+        }
+
+        const cancelOrder = (e: MouseEvent) => {
+            Modal.confirm({
+                title: `Tem certeza de que deseja cancelar esse pedido?`,
+                icon: h(CloseCircleOutlined, { style: 'color:red;' }),
+                width: '490px',
+                okText: 'Sim, tenho certeza',
+                okType: 'primary',
+                cancelText: 'Não, obrigado',
+                async onOk() {
+                    try {
+                        await api.patch(
+                            `https://localhost:7219/api/orders/${
+                                orderSelected.value!.id
+                            }/cancel`
+                        )
+                        await fetchData(false)
+                        aproveOrderLoading.value = false
+
+                        orderSelected.value!.orderStatus = OrderStatus.Cancel
+
+                        notifySuccess({
+                            successTitle: 'Pedido Negado com sucesso!',
+                        })
+                    } catch (error: any) {
+                        let erroModel: ErrorModel = error?.response?.data
+                        notifyError(erroModel)
+                    }
+                },
+                onCancel() {},
+            })
+        }
+
+        const collapseOrderKey = ref([])
+
+        watch(collapseOrderKey, (val) => {
+            console.log(val)
+        })
+
+        const closeHelicesDetails = () => {
+            orderSelectedId.value = ''
+            orderHelicesVisible.value = false
+        }
+
+        const openHelicesDetails = () => {
+            orderSelectedId.value = orderSelected.value!.id
+            orderHelicesVisible.value = true
         }
 
         return {
@@ -791,7 +1322,6 @@ export default defineComponent({
             h,
             formState,
             handlePesquisa,
-            rangeConfig,
             dateFormat,
             isAdmin,
             locale,
@@ -808,6 +1338,27 @@ export default defineComponent({
             newOrderStepOne,
             onInputCep,
             resetForm,
+            visibleDetails,
+            viewOrderDetails,
+            closeModal,
+            orderSelected,
+            approveOrder,
+            cancelOrder,
+            denyOrder,
+            confirmOrderInstallation,
+            OrderStatus,
+            collapseOrderKey,
+            aproveOrderVisible,
+            aproveOrderLoading,
+            aproveOrderState,
+            onAproveOrderConfirm,
+            onAproveOrderCancel,
+            aproveFormRef,
+            orderHelicesVisible,
+            formatCEP,
+            orderSelectedId,
+            closeHelicesDetails,
+            openHelicesDetails,
         }
     },
 })
@@ -821,5 +1372,37 @@ export default defineComponent({
 .actions {
     text-align: end;
     margin-bottom: 1rem;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-order-details h4,
+.order-header h4 {
+    color: #01010194;
+}
+
+.requester-details p,
+.order-details p,
+.order-address-details p,
+.order-details-installation p {
+    color: #01010194;
+}
+.modal-order-details hr {
+    border-top-style: dashed;
+    color: #97909094;
+}
+.modal-order-details {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.modal-order-details p {
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+    display: flex;
+    justify-content: space-between;
 }
 </style>

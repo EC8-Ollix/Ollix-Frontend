@@ -76,6 +76,7 @@ export interface ClientsData {
 
 export interface OrderData {
     id: string
+    orderNumber: string
     requesterName: string
     requesterEmail: string
     observation: string
@@ -84,6 +85,7 @@ export interface OrderData {
     installationDate: string
     quantityRequested: number
     addressId: string
+    addressApp: AddressApp
     clientId: string
 }
 

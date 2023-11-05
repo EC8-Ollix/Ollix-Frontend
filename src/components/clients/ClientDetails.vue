@@ -90,10 +90,12 @@ export default defineComponent({
             if (route.query.pagination) {
                 router.push({
                     path: '/clients',
-                    query: { pagination: route.query.pagination },
+                    query: {
+                        pagination: route.query.pagination,
+                        formState: route.query.formState,
+                    },
                 })
             } else {
-                // router.push({ path: '/clients' })
                 router.go(-1)
             }
         }

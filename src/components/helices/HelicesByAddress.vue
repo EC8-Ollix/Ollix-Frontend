@@ -80,7 +80,7 @@ import {
 } from '../../types/types'
 import { ErrorModel, notifyError } from '../../config/notification'
 import { formatStringDateToBR } from '../../composables/dateHelper'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 export default defineComponent({
     name: 'HelicesByAddress',
@@ -95,15 +95,18 @@ export default defineComponent({
         addressId: {
             type: String as PropType<string>,
         },
+        orderId: {
+            type: String as PropType<string>,
+        },
         viaClientScreen: {
             type: Boolean as PropType<boolean>,
             required: true,
         },
     },
     setup(props) {
-        const { clientId, addressId } = toRefs(props)
+        const { clientId, addressId, orderId } = toRefs(props)
         const totalRecords = ref(0)
-        const columns = [
+        let columns = [
             {
                 title: '',
                 dataIndex: 'active',
@@ -112,17 +115,17 @@ export default defineComponent({
             {
                 title: 'Hélice Id',
                 dataIndex: 'helixId',
-                width: '30%',
+                width: '20%',
             },
             {
-                title: 'Data da Instalação',
+                title: 'Dt. da Instalação',
                 dataIndex: 'installedDate',
                 width: '15%',
             },
             {
                 title: 'Endereço',
                 dataIndex: 'addressApp',
-                width: '40%',
+                width: '50%',
             },
             {
                 title: 'Ações',
@@ -131,6 +134,13 @@ export default defineComponent({
             },
         ]
 
+        if (orderId.value) {
+            columns = columns.filter(
+                (column) =>
+                    column.dataIndex !== 'active' &&
+                    column.dataIndex !== 'actions'
+            )
+        }
         const pageSizeOptions = ref<string[]>(['5', '10', '20', '40', '50'])
         const data = ref<Helice[]>([])
         const loading = ref(false)
@@ -152,7 +162,10 @@ export default defineComponent({
                 installed: true,
                 ...pagination.value,
             }
-
+            if (orderId.value) {
+                params.orderId = orderId.value
+                params.installed = undefined
+            }
             try {
                 const response = await api.get<PaginationResponse<Helice>>(
                     '/propellers/by-address',
@@ -172,9 +185,12 @@ export default defineComponent({
                 loading.value = false
             }
         }
+
         onMounted(fetchData)
 
         watch(pagination, fetchData, { deep: true })
+
+        watch(orderId, fetchData, { deep: true })
 
         const onShowSizeChange = (current: number, pageSize: number) => {
             pagination.value.page = current

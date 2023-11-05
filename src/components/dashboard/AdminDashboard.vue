@@ -5,7 +5,7 @@
                 <a-card
                     :bordered="false"
                     style="height: 175px"
-                    :loading="loading"
+                    :loading="ordersLoading"
                 >
                     <p style="font-size: 1rem; color: #3c3535">
                         <component
@@ -15,7 +15,9 @@
                         />
                         Pedidos Finalizados
                     </p>
-                    <p style="font-size: 1.8rem; color: #3c3535">126</p>
+                    <p style="font-size: 1.8rem; color: #3c3535">
+                        {{ orderCard.completedOrders }}
+                    </p>
                     <span style="font-size: 0.7rem">(Nos últimos 30 dias)</span>
                 </a-card>
             </a-col>
@@ -23,7 +25,7 @@
                 <a-card
                     :bordered="false"
                     style="height: 175px"
-                    :loading="loading"
+                    :loading="ordersLoading"
                 >
                     <p style="font-size: 1rem; color: #3c3535">
                         <component
@@ -31,7 +33,9 @@
                         />
                         Pedidos Negados
                     </p>
-                    <p style="font-size: 1.8rem; color: #3c3535">18</p>
+                    <p style="font-size: 1.8rem; color: #3c3535">
+                        {{ orderCard.deniedOrders }}
+                    </p>
                     <span style="font-size: 0.7rem">(Nos últimos 30 dias)</span>
                 </a-card>
             </a-col>
@@ -39,7 +43,7 @@
                 <a-card
                     :bordered="false"
                     style="height: 175px"
-                    :loading="loading"
+                    :loading="ordersLoading"
                 >
                     <p style="font-size: 1rem; color: #3c3535">
                         <component
@@ -47,7 +51,9 @@
                         />
                         Pedidos Cancelados
                     </p>
-                    <p style="font-size: 1.8rem; color: #3c3535">37</p>
+                    <p style="font-size: 1.8rem; color: #3c3535">
+                        {{ orderCard.canceledOrders }}
+                    </p>
                     <span style="font-size: 0.7rem">(Nos últimos 30 dias)</span>
                 </a-card>
             </a-col>
@@ -55,7 +61,7 @@
                 <a-card
                     :bordered="false"
                     style="height: 175px"
-                    :loading="loading"
+                    :loading="ordersLoading"
                 >
                     <p style="font-size: 1rem; color: #3c3535">
                         <component
@@ -67,13 +73,30 @@
                         />
                         Pedidos Pendentes
                     </p>
-                    <p style="font-size: 1.8rem; color: #3c3535">80</p>
+                    <p style="font-size: 1.8rem; color: #3c3535">
+                        {{ orderCard.pendingOrders }}
+                    </p>
                     <span style="font-size: 0.7rem">(Nos últimos 30 dias)</span>
                 </a-card>
             </a-col>
         </a-row>
 
-        <a-row :gutter="16" style="margin-bottom: 1rem; min-height: 290px">
+        <a-row :gutter="16">
+            <a-col :span="24">
+                <a-card :bordered="false">
+                    <a-result
+                        title="Em breve..."
+                        sub-title="Desculpe, aqui ainda não está pronto, em breve estará finalizado!"
+                    >
+                        <template #icon>
+                            <img src="/building.svg" style="width: 40%" />
+                        </template>
+                    </a-result>
+                </a-card>
+            </a-col>
+        </a-row>
+
+        <!-- <a-row :gutter="16" style="margin-bottom: 1rem; min-height: 290px">
             <a-col :span="12">
                 <a-card
                     :bordered="false"
@@ -189,7 +212,7 @@
         </a-row>
         <a-row :gutter="16" style="margin-bottom: 1rem">
             <a-col :span="6">
-                <!-- <a-card
+                <a-card
                     :bordered="false"
                     style="height: 200px"
                     :loading="loading"
@@ -215,17 +238,17 @@
                             285/38
                         </a-progress>
                     </p>
-                </a-card> -->
+                </a-card>
             </a-col></a-row
         >
         <a-button style="margin-top: 16px" @click="handleClick"
             >Toggle loading</a-button
-        >
+        > -->
     </a-layout-content>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useNavigation } from '../../composables/useNavigation'
 import {
@@ -239,6 +262,15 @@ import {
     getTagForOrderStatus,
 } from '../../types/order/orderStatus'
 
+import {
+    PaginationRequest,
+    PaginationResponse,
+    LogApp,
+} from '../../types/types'
+
+import { ErrorModel, notifyError } from '../../config/notification'
+
+import { api } from '../../api/api'
 interface ClientesData {
     number: number
     id: string
@@ -345,6 +377,54 @@ export default defineComponent({
             },
         ]
 
+        const orderCard = ref({
+            completedOrders: '0',
+            deniedOrders: '0',
+            canceledOrders: '0',
+            pendingOrders: '0',
+        })
+        const completedOrders = ref<string>('0')
+        const deniedOrders = ref<string>('0')
+        const canceledOrders = ref<string>('0')
+        const pendingOrders = ref<string>('0')
+
+        const ordersLoading = ref(true)
+        const updateOrdersCard = async () => {
+            ordersLoading.value = true
+
+            const params: any = {
+                requestedDateFrom: new Date(
+                    new Date().setDate(new Date().getDate() - 30)
+                ),
+                requestedDateTo: new Date(),
+                operation: 6,
+                page: 1,
+                pageSize: 50,
+            }
+
+            try {
+                const response = await api.get<PaginationResponse<LogApp>>(
+                    '/logs',
+                    {
+                        params: params,
+                    }
+                )
+
+                orderCard.value.completedOrders =
+                    response.data.totalRecords.toString()
+
+                orderCard.value.canceledOrders = '2'
+                orderCard.value.pendingOrders = '12'
+                orderCard.value.deniedOrders = '8'
+            } catch (error: any) {
+                let erroModel: ErrorModel = error?.response?.data
+                notifyError(erroModel)
+            } finally {
+                ordersLoading.value = false
+            }
+        }
+
+        onMounted(updateOrdersCard)
         return {
             user,
             goBack,
@@ -354,6 +434,9 @@ export default defineComponent({
             OrderStatus,
             data,
             addressData,
+            completedOrders,
+            ordersLoading,
+            orderCard,
         }
     },
 })

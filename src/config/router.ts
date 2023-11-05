@@ -45,12 +45,6 @@ const routes = [
         component: () => import('../components/helices/Helices.vue'),
         meta: { requiresAuth: true },
     },
-    // {
-    //     name: 'helicesByAddress',
-    //     path: '/helices/:clientId/:addressId',
-    //     component: () => import('../components/helices/HelicesByAddress.vue'),
-    //     meta: { requiresAuth: true },
-    // },
     {
         name: 'logs',
         path: '/logs/:clientId',
