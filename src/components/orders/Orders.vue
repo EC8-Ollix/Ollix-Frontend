@@ -1137,9 +1137,7 @@ export default defineComponent({
                         }
 
                         const response = await api.patch(
-                            `https://localhost:7219/api/orders/${
-                                orderSelected.value!.id
-                            }/process`,
+                            `/orders/${orderSelected.value!.id}/process`,
                             requestData
                         )
 
@@ -1184,9 +1182,7 @@ export default defineComponent({
                         }
 
                         const response = await api.patch(
-                            `https://localhost:7219/api/orders/${
-                                orderSelected.value!.id
-                            }/process`,
+                            `/orders/${orderSelected.value!.id}/process`,
                             requestData
                         )
 
@@ -1234,7 +1230,7 @@ export default defineComponent({
                 async onOk() {
                     try {
                         await api.patch(
-                            `https://localhost:7219/api/orders/${
+                            `/orders/${
                                 orderSelected.value!.id
                             }/confirm-installation`
                         )
@@ -1270,9 +1266,7 @@ export default defineComponent({
                 async onOk() {
                     try {
                         await api.patch(
-                            `https://localhost:7219/api/orders/${
-                                orderSelected.value!.id
-                            }/cancel`
+                            `/orders/${orderSelected.value!.id}/cancel`
                         )
                         await fetchData(false)
                         aproveOrderLoading.value = false
